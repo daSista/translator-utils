@@ -2,8 +2,6 @@
 namespace Translator\Adapter;
 
 class Simple {
-    const TRANSLATE_ON = 'on';
-    const TRANSLATE_OFF = 'off';
 
     private $translationMode;
     private $pageId;
@@ -21,7 +19,7 @@ class Simple {
      */
     private $testDecorator;
 
-    public function __construct($translationMode = self::TRANSLATE_OFF,
+    public function __construct($translationMode = \Translator\Application::TRANSLATE_OFF,
                                 $pageId,
                                 $language,
                                 $driver,
@@ -39,7 +37,7 @@ class Simple {
         $translation = array_key_exists($string, $this->translations) ?
                 $this->translations[$string] : $string;
 
-        if ($this->translationMode == self::TRANSLATE_ON) {
+        if ($this->translationMode == \Translator\Application::TRANSLATE_ON) {
             $this->driver->register($string, $this->pageId);
             return $this->decorator()->decorate($string, $translation);
         }

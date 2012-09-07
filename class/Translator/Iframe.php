@@ -18,6 +18,7 @@ class Iframe {
 
     public function __toString() {
         return <<<HTML
+<script type="text/javascript">document.domain = document.location.hostname</script>
 <iframe src="//{$this->hostname}" width="1" height="1" frameborder="0" id="translate"
     onload="this.contentWindow.initTranslation('{$this->language}', '{$this->pageId}');"></iframe>
 HTML;
