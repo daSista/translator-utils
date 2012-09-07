@@ -1,6 +1,6 @@
 {
-    "name": "Magomogo/translate-utils",
-    "description": "Utils for using with translate-couchdb",
+    "name": "Magomogo/translator-utils",
+    "description": "Utils for localization with Translator application",
     "repositories": [
         {
             "type": "package",
@@ -36,7 +36,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "Translate": "class/"
+            "Translator": "class/"
         }
     }
 }

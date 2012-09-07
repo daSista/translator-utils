@@ -1,1 +1,1 @@
-Utils needed for translate application
+Utils for localization with Translator application

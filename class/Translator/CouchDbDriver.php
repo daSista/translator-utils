@@ -1,5 +1,5 @@
 <?php
-namespace Translate;
+namespace Translator;
 
 class CouchDbDriver {
 

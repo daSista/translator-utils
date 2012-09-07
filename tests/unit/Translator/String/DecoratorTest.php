@@ -1,5 +1,5 @@
 <?php
-namespace Translate;
+namespace Translator;
 
 class String_DecoratorTest extends \PHPUnit_Framework_TestCase {
 
