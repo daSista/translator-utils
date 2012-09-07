@@ -12,7 +12,7 @@ class CouchDbDriver {
     }
 
     public function readTranslations($pageId, $language) {
-
+        return array();
     }
 
     public function authorizeClient() {
