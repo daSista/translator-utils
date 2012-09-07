@@ -1,5 +1,5 @@
 <?php
-namespace Translator;
+namespace Translator\String;
 
 class String_DecoratorTest extends \PHPUnit_Framework_TestCase {
 
@@ -13,6 +13,6 @@ class String_DecoratorTest extends \PHPUnit_Framework_TestCase {
 //--------------------------------------------------------------------------------------------------
 
     private static function dec() {
-        return new String_Decorator;
+        return new Decorator;
     }
 }

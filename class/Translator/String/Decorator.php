@@ -1,7 +1,7 @@
 <?php
-namespace Translator;
+namespace Translator\String;
 
-class String_Decorator {
+class Decorator {
 
     public function decorate($key, $translation) {
         $md5key = md5($key);
