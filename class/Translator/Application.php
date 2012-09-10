@@ -9,7 +9,7 @@ class Application {
     private $translationMode;
 
     /**
-     * @var CouchDbDriver
+     * @var CouchDbStorage
      */
     private $driver;
 
@@ -29,7 +29,7 @@ class Application {
 
     }
 
-    public function injectCode($pageId, $language) {
+    public function injectAtClientSide($pageId, $language) {
         if ($this->translationMode == self::TRANSLATE_ON) {
             return strval(new Iframe($this->hostname, $pageId, $language));
         }

@@ -19,13 +19,17 @@
                     "files": ["hamcrest.php"]
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Magomogo/CouchDB"
         }
     ],
     "require": {
         "mockery/mockery": "0.7.2",
         "EHER/PHPUnit": "1.6",
         "hamcrest/hamcrest": "0.3.0",
-        "bachi/couchdb": "*"
+        "couchdb/couchdb": "*"
     },
     "minimum-stability": "dev",
     "authors": [

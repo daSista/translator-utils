@@ -10,7 +10,7 @@ class Simple {
     private $translations;
 
     /**
-     * @var \Translator\CouchDbDriver
+     * @var \Translator\CouchDbStorage
      */
     private $driver;
 
