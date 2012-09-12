@@ -14,18 +14,9 @@ class CouchDbStorage {
         $this->db = $dbConnection;
     }
 
-    public function createLanguage($language) {
-        if ($this->db->hasDatabase($language)) {
-            $this->db->dropDatabase($language);
-        }
-        $this->db->createDatabase($language)->insert(self::dbSchema());
-    }
-
-    public function deleteLanguage($language) {
-        $this->db->dropDatabase($language);
-    }
-
     public function registerTranslation($key, $pageId, $language) {
+        $this->createDatabaseIfNeeded($language);
+
         try {
             $doc = $this->db->selectDatabase($language)->find(md5($key));
         } catch (\RuntimeException $e) {
@@ -68,6 +59,12 @@ class CouchDbStorage {
     }
 
 //--------------------------------------------------------------------------------------------------
+
+    private function createDatabaseIfNeeded($language) {
+        if (!$this->db->hasDatabase($language)) {
+            $this->db->createDatabase($language)->insert(self::dbSchema());
+        }
+    }
 
     private static function dbSchema() {
         return array(
