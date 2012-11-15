@@ -38,7 +38,7 @@ class Simple {
                 $this->translations[$string] : $string;
 
         if ($this->translationMode == \Translator\Application::TRANSLATE_ON) {
-            $this->driver->register($string, $this->pageId);
+            $this->driver->registerTranslation($string, $this->pageId, $this->language);
             return $this->decorator()->decorate($string, $translation);
         }
 
