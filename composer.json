@@ -1,35 +1,10 @@
 {
     "name": "Magomogo/translator-utils",
     "description": "Utils for localization with Translator application",
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "hamcrest/hamcrest",
-                "version": "0.3.0",
-                "source": {
-                    "url": "http://hamcrest.googlecode.com/svn/",
-                    "type": "svn",
-                    "reference": "tags/hamcrest-php-0.3.0/"
-                },
-                "autoload": {
-                    "psr-0": {
-                        "Hamcrest": "hamcrest/"
-                    },
-                    "files": ["hamcrest.php"]
-                }
-            }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Magomogo/CouchDB"
-        }
-    ],
     "require": {
         "mockery/mockery": "0.7.2",
         "EHER/PHPUnit": "1.6",
-        "hamcrest/hamcrest": "0.3.0",
-        "couchdb/couchdb": "*"
+        "bachi/couchdb": "*"
     },
     "minimum-stability": "dev",
     "authors": [
