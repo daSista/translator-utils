@@ -19,10 +19,6 @@
                     "files": ["hamcrest.php"]
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Magomogo/CouchDB"
         }
     ],
     "require": {
