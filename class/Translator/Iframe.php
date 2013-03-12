@@ -1,7 +1,8 @@
 <?php
 namespace Translator;
 
-class Iframe {
+class Iframe
+{
 
     private $hostname;
 
@@ -10,13 +11,15 @@ class Iframe {
 
     private $language;
 
-    public function __construct($hostname, $pageId, $language) {
+    public function __construct($hostname, $pageId, $language)
+    {
         $this->hostname = $hostname;
         $this->pageId = $pageId;
         $this->language = $language;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return <<<HTML
 <script type="text/javascript">document.domain = document.location.hostname</script>
 <iframe src="//{$this->hostname}" width="1" height="1" frameborder="0" id="translate"

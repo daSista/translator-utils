@@ -1,9 +1,11 @@
 <?php
 namespace Translator\String;
 
-class String_DecoratorTest extends \PHPUnit_Framework_TestCase {
+class String_DecoratorTest extends \PHPUnit_Framework_TestCase
+{
 
-    public function testDecoratesTranslatableString() {
+    public function testDecoratesTranslatableString()
+    {
         $this->assertEquals(
             '‘8b1a9953c4611296a827abf8c47804d7’Привет’',
             self::dec()->decorate('Hello', 'Привет')
@@ -12,7 +14,8 @@ class String_DecoratorTest extends \PHPUnit_Framework_TestCase {
 
 //--------------------------------------------------------------------------------------------------
 
-    private static function dec() {
+    private static function dec()
+    {
         return new Decorator;
     }
 }
