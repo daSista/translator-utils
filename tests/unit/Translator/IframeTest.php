@@ -10,13 +10,13 @@ class IframeTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadsTranslatorApplicationInsideIframe()
     {
-        $this->assertContains('src="//t.host.name"', strval(self::iframe('t.host.name')));
+        $this->assertContains('src="/translator"', strval(self::iframe('/translator')));
     }
 
 //--------------------------------------------------------------------------------------------------
 
-    private static function iframe($hostname = '', $pageId = '', $language = '')
+    private static function iframe($baseUri = '', $pageId = '', $language = '')
     {
-        return new Iframe($hostname, $pageId, $language);
+        return new Iframe($baseUri, $pageId, $language);
     }
 }

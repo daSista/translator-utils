@@ -3,17 +3,24 @@ namespace Translator;
 
 class Iframe
 {
+    /**
+     * @var string
+     */
+    private $baseUri;
 
-    private $hostname;
-
-
+    /**
+     * @var string
+     */
     private $pageId;
 
+    /**
+     * @var string
+     */
     private $language;
 
-    public function __construct($hostname, $pageId, $language)
+    public function __construct($baseUri, $pageId, $language)
     {
-        $this->hostname = $hostname;
+        $this->baseUri = $baseUri;
         $this->pageId = $pageId;
         $this->language = $language;
     }
@@ -21,8 +28,7 @@ class Iframe
     public function __toString()
     {
         return <<<HTML
-<script type="text/javascript">document.domain = document.location.hostname</script>
-<iframe src="//{$this->hostname}" width="1" height="1" frameborder="0" id="translate"
+<iframe src="{$this->baseUri}" width="1" height="1" frameborder="0" id="translate"
     onload="this.contentWindow.initTranslation('{$this->language}', '{$this->pageId}');"></iframe>
 HTML;
 
