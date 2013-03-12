@@ -19,9 +19,9 @@ class Application {
         $this->translationMode = $translationMode;
     }
 
-    public function translateAdapter($pageId, $language) {
+    public function translateAdapter($pageId) {
         return new Adapter\Simple(
-            $this->translationMode, $pageId, $language, $this->driver, new String\Decorator()
+            $this->translationMode, $pageId, $this->driver, new String\Decorator()
         );
     }
 

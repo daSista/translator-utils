@@ -1,16 +1,10 @@
 <?php
 namespace Translator;
 
-use Doctrine\CouchDB\CouchDBClient;
-use Doctrine\CouchDB\HTTP\SocketClient as HttpClient;
+use Translator\Test\CouchDbTestCase;
 
-class CouchDbStorageIntegrationTest extends \PHPUnit_Framework_TestCase
+class CouchDbStorageIntegrationTest extends CouchDbTestCase
 {
-    protected function tearDown()
-    {
-        self::db()->deleteDatabase('i18n_en');
-    }
-
     public function testFetchesTranslationsForAPage()
     {
         self::storage()->registerTranslation('hello', 'index/index');
@@ -43,10 +37,5 @@ class CouchDbStorageIntegrationTest extends \PHPUnit_Framework_TestCase
     private static function storage()
     {
         return new CouchDbStorage(self::db());
-    }
-
-    private static function db()
-    {
-        return new CouchDBClient(new HttpClient(), 'i18n_en');
     }
 }

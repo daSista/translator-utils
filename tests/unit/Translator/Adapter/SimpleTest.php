@@ -1,5 +1,6 @@
 <?php
 namespace Translator\Adapter;
+
 use Mockery as m;
 
 class SimpleTest extends \PHPUnit_Framework_TestCase{
@@ -20,7 +21,7 @@ class SimpleTest extends \PHPUnit_Framework_TestCase{
 
     public function testRegistersAStringInCurrentPage() {
         $driver = m::mock(array('readTranslations' => array()));
-        $driver->shouldReceive('register')->with('hello', __FILE__);
+        $driver->shouldReceive('registerTranslation')->with('hello', __FILE__);
         self::adapter(\Translator\Application::TRANSLATE_ON, $driver)->translate('hello');
     }
 
@@ -28,10 +29,9 @@ class SimpleTest extends \PHPUnit_Framework_TestCase{
 
     private static function adapter($mode = null, $driver = null, $decorator = null) {
         return new Simple(
-            $mode ?: \Translator\Application::TRANSLATE_OFF,
             __FILE__,
-            'ru',
-            $driver ?: m::mock(array('readTranslations' => array(), 'register' => null)),
+            $driver ?: m::mock(array('readTranslations' => array(), 'registerTranslation' => null)),
+            $mode ?: \Translator\Application::TRANSLATE_OFF,
             $decorator
         );
     }

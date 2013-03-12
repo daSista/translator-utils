@@ -16,6 +16,7 @@
 
     <php>
         <const name="TESTS_IN_PROGRESS" value="1"/>
+        <const name="TEST_COUCHDB_NAME" value="translator_couchdb_storage_integration_test"/>
     </php>
 
 </phpunit>

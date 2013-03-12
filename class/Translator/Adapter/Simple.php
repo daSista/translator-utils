@@ -1,12 +1,21 @@
 <?php
 namespace Translator\Adapter;
 
-class Simple {
-
+class Simple
+{
+    /**
+     * @var string
+     */
     private $translationMode;
-    private $pageId;
-    private $language;
 
+    /**
+     * @var string
+     */
+    private $pageId;
+
+    /**
+     * @var array key to value map
+     */
     private $translations;
 
     /**
@@ -19,26 +28,29 @@ class Simple {
      */
     private $testDecorator;
 
-    public function __construct($translationMode = \Translator\Application::TRANSLATE_OFF,
-                                $pageId,
-                                $language,
-                                $driver,
-                                $testDecorator = null
-    ) {
+    /**
+     * @param string $translationMode
+     * @param string $pageId
+     * @param \Translator\CouchDbStorage $driver
+     * @param null|\Translator\String\Decorator $testDecorator
+     */
+    public function __construct($pageId, $driver, $translationMode = \Translator\Application::TRANSLATE_OFF,
+                                $testDecorator = null)
+    {
         $this->translationMode = $translationMode;
         $this->pageId = $pageId;
-        $this->language = $language;
         $this->driver = $driver;
         $this->testDecorator = $testDecorator;
-        $this->translations = $this->driver->readTranslations($pageId, $language);
+        $this->translations = $this->driver->readTranslations($pageId);
     }
 
-    public function translate($string) {
+    public function translate($string)
+    {
         $translation = array_key_exists($string, $this->translations) ?
                 $this->translations[$string] : $string;
 
         if ($this->translationMode == \Translator\Application::TRANSLATE_ON) {
-            $this->driver->register($string, $this->pageId);
+            $this->driver->registerTranslation($string, $this->pageId);
             return $this->decorator()->decorate($string, $translation);
         }
 
@@ -47,7 +59,8 @@ class Simple {
 
 //--------------------------------------------------------------------------------------------------
 
-    private function decorator() {
+    private function decorator()
+    {
         return $this->testDecorator ?: new \Translator\String\Decorator();
     }
 
