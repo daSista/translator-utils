@@ -1,4 +1,5 @@
 dir=$(cd "$(dirname "$0")";pwd);
 
 cd $dir
-phpunit ./unit && phpunit ./integration
+../vendor/bin/phpunit ./unit &&
+../vendor/bin/phpunit ./integration

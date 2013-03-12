@@ -1,24 +1,27 @@
 <?php
 namespace Translator;
 
+use Doctrine\CouchDB\CouchDBClient;
+use Doctrine\CouchDB\HTTP\SocketClient as HttpClient;
+
 class CouchDbStorageIntegrationTest extends \PHPUnit_Framework_TestCase
 {
     protected function tearDown()
     {
-        self::db()->dropDatabase('i18n_en');
+        self::db()->deleteDatabase('i18n_en');
     }
 
     public function testFetchesTranslationsForAPage()
     {
-        self::storage()->registerTranslation('hello', 'index/index', 'en');
-        self::storage()->registerTranslation('hello', 'index/form', 'en');
-        self::storage()->registerTranslation('welcome', 'index/form', 'en');
+        self::storage()->registerTranslation('hello', 'index/index');
+        self::storage()->registerTranslation('hello', 'index/form');
+        self::storage()->registerTranslation('welcome', 'index/form');
 
         $this->assertEquals(
             array(
                 'hello' => 'hello'
             ),
-            self::storage()->readTranslations('index/index', 'en')
+            self::storage()->readTranslations('index/index')
         );
 
         $this->assertEquals(
@@ -26,11 +29,11 @@ class CouchDbStorageIntegrationTest extends \PHPUnit_Framework_TestCase
                 'hello' => 'hello',
                 'welcome' => 'welcome'
             ),
-            self::storage()->readTranslations('index/form', 'en')
+            self::storage()->readTranslations('index/form')
         );
     }
 
-//--------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
     private static function storage()
     {
@@ -39,12 +42,6 @@ class CouchDbStorageIntegrationTest extends \PHPUnit_Framework_TestCase
 
     private static function db()
     {
-        return new \CouchDB\Connection(
-            new \CouchDB\Http\LoggingClient(
-                new \CouchDB\Http\StreamClient('localhost', 5984)
-            ),
-            null,
-            new \CouchDB\Auth\Cookie('test', 123)
-        );
+        return new CouchDBClient(new HttpClient(), 'i18n_en');
     }
 }

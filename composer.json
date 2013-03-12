@@ -1,37 +1,32 @@
 {
     "name": "Magomogo/translator-utils",
-    "description": "Utils for localization with Translator application",
+    "description": "PHP Utils for localization with Magomogo/Translator application",
     "repositories": [
         {
             "type": "package",
             "package": {
                 "name": "hamcrest/hamcrest",
-                "version": "0.3.0",
-                "source": {
-                    "url": "http://hamcrest.googlecode.com/svn/",
-                    "type": "svn",
-                    "reference": "tags/hamcrest-php-0.3.0/"
+                "version": "1.1.0",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://hamcrest.googlecode.com/files/hamcrest-php-1.1.0.zip"
                 },
+                "include-path": ["Hamcrest-1.1.0/"],
                 "autoload": {
-                    "psr-0": {
-                        "Hamcrest": "hamcrest/"
-                    },
-                    "files": ["hamcrest.php"]
+                    "psr-0": { "Hamcrest_": "Hamcrest-1.1.0/" },
+                    "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Magomogo/CouchDB"
         }
     ],
     "require": {
-        "mockery/mockery": "0.7.2",
-        "EHER/PHPUnit": "1.6",
-        "hamcrest/hamcrest": "0.3.0",
-        "couchdb/couchdb": "*"
+        "doctrine/couchdb": "@dev"
     },
-    "minimum-stability": "dev",
+    "require-dev": {
+        "mockery/mockery": "0.7.*",
+        "phpunit/phpunit": "3.7.*",
+        "hamcrest/hamcrest": "1.1.0"
+    },
     "authors": [
         {
             "name": "Maxim Gnatenko",
