@@ -33,6 +33,11 @@ class CouchDbStorageIntegrationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSurvivesWhenThereAreNoTranslation()
+    {
+        self::storage()->readTranslations('index/form');
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function storage()

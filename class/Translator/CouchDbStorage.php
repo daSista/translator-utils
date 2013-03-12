@@ -18,6 +18,7 @@ class CouchDbStorage
     public function registerTranslation($key, $pageId)
     {
         $this->createDatabaseIfNeeded();
+
         $response = $this->db->findDocument(md5($key));
         $doc = $response->status === 404 ? self::newDoc($key) : $response->body;
 
@@ -36,19 +37,22 @@ class CouchDbStorage
     {
         $translations = array();
 
-        $query = $this->db->createViewQuery('main', 'by_page_id');
-        $query->setKey($pageId);
+        if ($this->databaseExists()) {
 
-        foreach ($query->execute() as $record) {
-            $doc = $record['value'];
-            $value = $doc['key'];
-            if (isset($doc['defaultTranslation'])) {
-                $value = $doc['defaultTranslation'];
+            $query = $this->db->createViewQuery('main', 'by_page_id');
+            $query->setKey($pageId);
+
+            foreach ($query->execute() as $record) {
+                $doc = $record['value'];
+                $value = $doc['key'];
+                if (isset($doc['defaultTranslation'])) {
+                    $value = $doc['defaultTranslation'];
+                }
+                if (isset($doc['pageTranslations'][$pageId])) {
+                    $value = $doc['pageTranslations'][$pageId];
+                }
+                $translations[$doc['key']] = $value;
             }
-            if (isset($doc['pageTranslations'][$pageId])) {
-                $value = $doc['pageTranslations'][$pageId];
-            }
-            $translations[$doc['key']] = $value;
         }
 
         return $translations;
@@ -58,13 +62,15 @@ class CouchDbStorage
 
     private function createDatabaseIfNeeded()
     {
-        if (!in_array($this->db->getDatabase(), $this->db->getAllDatabases())) {
+        if (!$this->databaseExists()) {
             $this->db->createDatabase($this->db->getDatabase());
-            $this->db->createDesignDocument(
-                'main',
-                new CouchDbSchema()
-            );
+            $this->db->createDesignDocument('main', new CouchDbSchema());
         }
+    }
+
+    private function databaseExists()
+    {
+        return in_array($this->db->getDatabase(), $this->db->getAllDatabases());
     }
 
     private static function newDoc($key)
