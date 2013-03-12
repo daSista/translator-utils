@@ -3,18 +3,21 @@ namespace Translator;
 
 use \CouchDB\Http\ClientInterface;
 
-class CouchDbStorage {
+class CouchDbStorage
+{
 
     /**
      * @var \CouchDB\Connection
      */
     private $db;
 
-    public function __construct($dbConnection) {
+    public function __construct($dbConnection)
+    {
         $this->db = $dbConnection;
     }
 
-    public function registerTranslation($key, $pageId, $language) {
+    public function registerTranslation($key, $pageId, $language)
+    {
         $this->createDatabaseIfNeeded($language);
 
         try {
@@ -28,18 +31,18 @@ class CouchDbStorage {
 
         if (isset($doc['_rev'])) {
             $this->db->selectDatabase($language)->update($doc['_id'], $doc);
-        }
-        else {
+        } else {
             $this->db->selectDatabase($language)->insert($doc);
         }
     }
 
-    public function readTranslations($pageId, $language) {
+    public function readTranslations($pageId, $language)
+    {
         $translations = array();
 
         if ($this->db->hasDatabase($language)) {
             $view = $this->db->selectDatabase($language)
-                        ->find('_design/main/_view/by_page_id?key="' . $pageId . '"');
+                ->find('_design/main/_view/by_page_id?key="' . $pageId . '"');
 
             foreach ($view['rows'] as $record) {
                 $doc = $record['value'];
@@ -60,13 +63,15 @@ class CouchDbStorage {
 
 //--------------------------------------------------------------------------------------------------
 
-    private function createDatabaseIfNeeded($language) {
+    private function createDatabaseIfNeeded($language)
+    {
         if (!$this->db->hasDatabase($language)) {
             $this->db->createDatabase($language)->insert(self::dbSchema());
         }
     }
 
-    private static function dbSchema() {
+    private static function dbSchema()
+    {
         return array(
             '_id' => '_design/main',
             'language' => 'javascript',
@@ -82,7 +87,8 @@ class CouchDbStorage {
         );
     }
 
-    private static function newDoc($key) {
+    private static function newDoc($key)
+    {
         return array(
             '_id' => md5($key),
             'key' => $key,
@@ -91,8 +97,9 @@ class CouchDbStorage {
         );
     }
 
-    private static function mapDocumentsByPageId() {
-        return <<<'JS'
+    private static function mapDocumentsByPageId()
+    {
+        return <<<'CouchJS'
 function (doc) {
     var pageId;
     if (doc.pageTranslations) {
@@ -103,11 +110,12 @@ function (doc) {
         }
     }
 }
-JS;
+CouchJS;
     }
 
-    private static function mapPageIds() {
-        return <<<'JS'
+    private static function mapPageIds()
+    {
+        return <<<'CouchJS'
 function (doc) {
     var pageId;
     if (doc.pageTranslations) {
@@ -118,7 +126,7 @@ function (doc) {
         }
     }
 }
-JS;
+CouchJS;
 
     }
 }
