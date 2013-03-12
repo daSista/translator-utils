@@ -5,15 +5,20 @@ use \CouchDB\Http\ClientInterface;
 
 class CouchDbStorage
 {
+    /**
+     * @var string
+     */
+    private $dbPrefix;
 
     /**
      * @var \CouchDB\Connection
      */
     private $db;
 
-    public function __construct($dbConnection)
+    public function __construct($dbConnection, $dbPrefix = 'i18n')
     {
         $this->db = $dbConnection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     public function registerTranslation($key, $pageId, $language)
@@ -21,7 +26,7 @@ class CouchDbStorage
         $this->createDatabaseIfNeeded($language);
 
         try {
-            $doc = $this->db->selectDatabase($language)->find(md5($key));
+            $doc = $this->database($language)->find(md5($key));
         } catch (\RuntimeException $e) {
             $doc = self::newDoc($key);
         }
@@ -30,9 +35,9 @@ class CouchDbStorage
         }
 
         if (isset($doc['_rev'])) {
-            $this->db->selectDatabase($language)->update($doc['_id'], $doc);
+            $this->database($language)->update($doc['_id'], $doc);
         } else {
-            $this->db->selectDatabase($language)->insert($doc);
+            $this->database($language)->insert($doc);
         }
     }
 
@@ -40,8 +45,8 @@ class CouchDbStorage
     {
         $translations = array();
 
-        if ($this->db->hasDatabase($language)) {
-            $view = $this->db->selectDatabase($language)
+        if ($this->hasDatabase($language)) {
+            $view = $this->database($language)
                 ->find('_design/main/_view/by_page_id?key="' . $pageId . '"');
 
             foreach ($view['rows'] as $record) {
@@ -65,8 +70,8 @@ class CouchDbStorage
 
     private function createDatabaseIfNeeded($language)
     {
-        if (!$this->db->hasDatabase($language)) {
-            $this->db->createDatabase($language)->insert(self::dbSchema());
+        if (!$this->hasDatabase($language)) {
+            $this->createDatabase($language)->insert(self::dbSchema());
         }
     }
 
@@ -128,5 +133,24 @@ function (doc) {
 }
 CouchJS;
 
+    }
+
+    /**
+     * @param string $language
+     * @return \CouchDB\Database
+     */
+    private function database($language)
+    {
+        return $this->db->selectDatabase($this->dbPrefix . '_' . $language);
+    }
+
+    private function hasDatabase($language)
+    {
+        return $this->db->hasDatabase($this->dbPrefix . '_' . $language);
+    }
+
+    private function createDatabase($language)
+    {
+        return $this->db->createDatabase($this->dbPrefix . '_' . $language);
     }
 }
