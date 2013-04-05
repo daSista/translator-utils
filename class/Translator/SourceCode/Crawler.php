@@ -30,18 +30,29 @@ class Crawler
     {
         foreach ($pathsToSearchIn as $path) {
             foreach ($this->readDir($path) as $relativePath) {
-                foreach ($this->translateFinder->select($path . '/' . $relativePath) as $keyWithNamespace => $parameters) {
-                    $this->storage->registerTranslation(
-                        self::keyPart($keyWithNamespace),
-                        self::translate($keyWithNamespace, $translations),
-                        self::namespacePart($keyWithNamespace)
-                    );
+                if (preg_match('/' . preg_quote($fileExt) . '$/', $relativePath)) {
+                    $this->registerAllTranslations($translations, $path . '/' . $relativePath);
                 }
             }
         }
     }
 
 //----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param array $translations
+     * @param $path
+     */
+    private function registerAllTranslations(array $translations, $path)
+    {
+        foreach ($this->translateFinder->select($path) as $keyWithNamespace => $parameters) {
+            $this->storage->registerTranslation(
+                self::keyPart($keyWithNamespace),
+                self::translate($keyWithNamespace, $translations),
+                self::namespacePart($keyWithNamespace)
+            );
+        }
+    }
 
     private function readDir($path, $exclude = ".|..", $relativePart = '.') {
         $path = rtrim($path, "/") . "/";
@@ -83,10 +94,15 @@ class Crawler
             if (array_key_exists($ns, $readFrom)) {
                 $readFrom = $readFrom[$ns];
             } else {
-                return null;
+                break;
             }
         }
         return array_key_exists(self::keyPart($keyWithNamespace), $readFrom) ?
-            $readFrom[self::keyPart($keyWithNamespace)] : null;
+            $readFrom[self::keyPart($keyWithNamespace)] : self::draftTranslation($keyWithNamespace);
+    }
+
+    private static function draftTranslation($keyWithNamespace)
+    {
+        return str_replace(array('/', ':'), ' ', $keyWithNamespace);
     }
 }
