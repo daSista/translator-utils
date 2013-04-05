@@ -59,7 +59,15 @@ CouchJS;
     {
         return <<<'CouchJS'
 function (doc) {
-    emit(doc.namespace, null);
+    var i, combinedNs;
+    if (doc.namespace) {
+        combinedNs = '';
+        for (i = 0; i < doc.namespace.length; i++) {
+            combinedNs = combinedNs + doc.namespace[i];
+            emit(combinedNs, null);
+            combinedNs = combinedNs + '/'
+        }
+    }
 }
 CouchJS;
 
