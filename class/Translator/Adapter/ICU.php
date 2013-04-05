@@ -16,6 +16,9 @@ class ICU implements AdapterInterface
 
     public function translate($key, $params = array())
     {
-        return msgfmt_format_message($this->locale, $this->translations[$key], $params);
+        if (array_key_exists($key, $this->translations)) {
+            return msgfmt_format_message($this->locale, $this->translations[$key], $params);
+        }
+        return $key;
     }
 }

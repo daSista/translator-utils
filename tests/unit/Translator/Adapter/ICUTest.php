@@ -57,6 +57,11 @@ class ICUTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testReturnsKeyWhenTranslationNotDefined()
+    {
+        $this->assertEquals('notDefined', self::adapter()->translate('notDefined'));
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function adapter($translations = null, $locale = null)
