@@ -19,6 +19,7 @@ class CouchDb
     {
         $this->createDatabaseIfNeeded();
 
+        /** @var $response \Doctrine\CouchDB\HTTP\Response */
         $response = $this->db->findDocument(self::uniqueDbId($key, $namespace));
         $doc = $response->status === 404 ? self::newDoc($key, $translation, $namespace) : $response->body;
 
@@ -31,23 +32,57 @@ class CouchDb
 
     public function readTranslations($namespace = null)
     {
+        if ($this->databaseExists()) {
+            return $namespace ? $this->queryView($namespace) :  $this->queryAllDocs();
+        }
+
+        return array();
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
+
+    private function queryView($namespace)
+    {
         $translations = array();
 
-        if ($this->databaseExists()) {
+        $query = $this->db->createViewQuery('main', 'by_namespace');
+        $query->setKey($namespace);
 
-            $query = $this->db->createViewQuery('main', 'by_namespace');
-            $query->setKey($namespace);
-
-            foreach ($query->execute() as $record) {
-                $doc = $record['value'];
-                $translations[$doc['key']] = $doc['translation'];
-            }
+        foreach ($query->execute() as $record) {
+            $doc = $record['value'];
+            $translations = array_merge($translations, self::singleTranslation($doc));
         }
 
         return $translations;
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    private function queryAllDocs()
+    {
+        $translations = array();
+
+        /** @var $response \Doctrine\CouchDB\HTTP\Response */
+        $response = $this->db->allDocs();
+        if ($response->status === 200) {
+            foreach ($response->body['rows'] as $row) {
+                if (array_key_exists('translation', $row['doc'])) {
+                    $translations = array_merge($translations, self::singleTranslation($row['doc']));
+                }
+            }
+        }
+        
+        return $translations;
+    }
+
+    /**
+     * @param $doc
+     * @return mixed
+     */
+    private static function singleTranslation($doc)
+    {
+        return array(
+            ($doc['namespace'] ? $doc['namespace'] . ':' : '') . $doc['key'] => $doc['translation']
+        );
+    }
 
     private function createDatabaseIfNeeded()
     {
