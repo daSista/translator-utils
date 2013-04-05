@@ -26,7 +26,8 @@
     "require-dev": {
         "mockery/mockery": "0.7.*",
         "phpunit/phpunit": "3.7.*",
-        "hamcrest/hamcrest": "1.1.0"
+        "hamcrest/hamcrest": "1.1.0",
+        "mikey179/vfsStream": "1.1.*"
     },
     "authors": [
         {

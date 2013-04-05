@@ -7,8 +7,9 @@ class AngularViewTest extends \PHPUnit_Framework_TestCase
     public function testCanIterateOverEachTranslationKeys()
     {
         $translations = array();
+        $iterator = new AngularView;
 
-        foreach (new AngularView(__DIR__ . '/data/angular-view.html') as $key => $paramNames) {
+        foreach ($iterator->select(__DIR__ . '/data/angular-view.html') as $key => $paramNames) {
             $translations[$key] = $paramNames;
         }
 
