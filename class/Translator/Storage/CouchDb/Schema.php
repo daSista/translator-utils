@@ -1,9 +1,9 @@
 <?php
-namespace Translator;
+namespace Translator\Storage\CouchDb;
 
 use Doctrine\CouchDB\View\DesignDocument;
 
-class CouchDbSchema implements DesignDocument
+class Schema implements DesignDocument
 {
     /**
      * Get design doc code

@@ -1,9 +1,9 @@
 <?php
-namespace Translator;
+namespace Translator\Storage;
 
 use Translator\Test\CouchDbTestCase;
 
-class CouchDbStorageIntegrationTest extends CouchDbTestCase
+class CouchDbIntegrationTest extends CouchDbTestCase
 {
     public function testFetchesTranslationsForANamespace()
     {
@@ -38,6 +38,6 @@ class CouchDbStorageIntegrationTest extends CouchDbTestCase
 
     private static function storage()
     {
-        return new CouchDbStorage(self::db());
+        return new CouchDb(self::db());
     }
 }

@@ -1,9 +1,9 @@
 <?php
-namespace Translator;
+namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
 
-class CouchDbStorage
+class CouchDb
 {
     /**
      * @var \Doctrine\CouchDB\CouchDBClient
@@ -53,7 +53,7 @@ class CouchDbStorage
     {
         if (!$this->databaseExists()) {
             $this->db->createDatabase($this->db->getDatabase());
-            $this->db->createDesignDocument('main', new CouchDbSchema());
+            $this->db->createDesignDocument('main', new CouchDb\Schema());
         }
     }
 
