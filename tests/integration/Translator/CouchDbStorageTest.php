@@ -5,31 +5,33 @@ use Translator\Test\CouchDbTestCase;
 
 class CouchDbStorageIntegrationTest extends CouchDbTestCase
 {
-    public function testFetchesTranslationsForAPage()
+    public function testFetchesTranslationsForANamespace()
     {
-        self::storage()->registerTranslation('hello', 'index/index');
-        self::storage()->registerTranslation('hello', 'index/form');
-        self::storage()->registerTranslation('welcome', 'index/form');
+        self::storage()->registerTranslation('notEmpty', 'Should be not empty', 'validation/error');
+        self::storage()->registerTranslation('emailFormat', 'Email format is incorrect', 'validation/error');
+        self::storage()->registerTranslation('pageXFromY', 'Page %d from $d', 'pager');
+        self::storage()->registerTranslation('totalAmountOfPages', 'Total %d page(s)', 'pager');
 
         $this->assertEquals(
             array(
-                'hello' => 'hello'
+                'notEmpty' => 'Should be not empty',
+                'emailFormat' => 'Email format is incorrect'
             ),
-            self::storage()->readTranslations('index/index')
+            self::storage()->readTranslations('validation/error')
         );
 
         $this->assertEquals(
             array(
-                'hello' => 'hello',
-                'welcome' => 'welcome'
+                'pageXFromY' => 'Page %d from $d',
+                'totalAmountOfPages' => 'Total %d page(s)'
             ),
-            self::storage()->readTranslations('index/form')
+            self::storage()->readTranslations('pager')
         );
     }
 
     public function testSurvivesWhenThereAreNoTranslation()
     {
-        self::storage()->readTranslations('index/form');
+        self::storage()->readTranslations('some/namespace');
     }
 
 //----------------------------------------------------------------------------------------------------------------------

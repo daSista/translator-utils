@@ -2,7 +2,7 @@
 
 namespace Translator\Adapter;
 
-class ICU 
+class ICU implements AdapterInterface
 {
     private $translations = array();
 
@@ -14,10 +14,8 @@ class ICU
         $this->locale = $locale;
     }
 
-    public function translate($key, $params)
+    public function translate($key, $params = array())
     {
-        $messageFormatter = new \MessageFormatter($this->locale, $this->translations[$key]);
-
-        return $messageFormatter->format($params);
+        return msgfmt_format_message($this->locale, $this->translations[$key], $params);
     }
 }

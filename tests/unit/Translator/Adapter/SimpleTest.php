@@ -2,41 +2,29 @@
 namespace Translator\Adapter;
 
 use Mockery as m;
+use Translator\Application;
 
 class SimpleTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testTakesATranslationFromDriver()
+    public function testReadsTranslationFromArray()
     {
-        $driver = m::mock(array(
-            'readTranslations' => array('hello' => 'привет')
-        ));
-
-        $this->assertEquals('привет', self::adapter(null, $driver)->translate('hello'));
+        $this->assertEquals('привет', self::adapter(null, array('hello' => 'привет'))->translate('hello'));
     }
 
     public function testUsesStringDecoratorInTranslationMode()
     {
         $decorator = m::mock();
         $decorator->shouldReceive('decorate')->once();
-        self::adapter(\Translator\Application::TRANSLATE_ON, null, $decorator)->translate('foo');
-    }
-
-    public function testRegistersAStringInCurrentPage()
-    {
-        $driver = m::mock(array('readTranslations' => array()));
-        $driver->shouldReceive('registerTranslation')->with('hello', __FILE__);
-        self::adapter(\Translator\Application::TRANSLATE_ON, $driver)->translate('hello');
+        self::adapter(Application::TRANSLATE_ON, null, $decorator)->translate('foo');
     }
 
 //--------------------------------------------------------------------------------------------------
 
-    private static function adapter($mode = null, $driver = null, $decorator = null)
+    private static function adapter($mode = null, $translations = null, $decorator = null)
     {
         return new Simple(
-            __FILE__,
-            $driver ? : m::mock(array('readTranslations' => array(), 'registerTranslation' => null)),
-            $mode ? : \Translator\Application::TRANSLATE_OFF,
+            $translations ? : array(),
+            $mode ? : Application::TRANSLATE_OFF,
             $decorator
         );
     }

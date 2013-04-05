@@ -6,29 +6,36 @@ class Application
     const TRANSLATE_ON = 'on';
     const TRANSLATE_OFF = 'off';
 
-    private $baseUri;
+    /**
+     * @var string
+     */
+    private $applicationBaseUri;
+
+    /**
+     * @var string TRANSLATE_*
+     */
     private $translationMode;
 
     /**
-     * @var CouchDbStorage
+     * @var \Translator\Adapter\AdapterInterface
      */
-    private $storage;
+    private $translateAdapter;
 
     /**
-     * @param string $baseUri
-     * @param \Translator\CouchDbStorage $storage
+     * @param string $applicationBaseUri
+     * @param \Translator\Adapter\AdapterInterface $translateAdapter
      * @param string $translationMode
      */
-    public function __construct($baseUri, $storage, $translationMode = self::TRANSLATE_OFF)
+    public function __construct($applicationBaseUri, $translateAdapter, $translationMode = self::TRANSLATE_OFF)
     {
-        $this->baseUri = $baseUri;
-        $this->storage = $storage;
+        $this->applicationBaseUri = $applicationBaseUri;
+        $this->translateAdapter = $translateAdapter;
         $this->translationMode = $translationMode;
     }
 
-    public function translateAdapter($pageId)
+    public function translate($key, $params = array())
     {
-        return new Adapter\Simple($pageId, $this->storage, $this->translationMode);
+        return $this->translateAdapter->translate($key, $params);
     }
 
     public function authorizeClient()
@@ -36,10 +43,10 @@ class Application
 
     }
 
-    public function injectAtClientSide($pageId, $language)
+    public function injectAtClientSide($locale)
     {
         if ($this->translationMode == self::TRANSLATE_ON) {
-            return strval(new Iframe($this->baseUri, $pageId, $language));
+            return strval(new Iframe($this->applicationBaseUri, $locale));
         }
         return '';
     }

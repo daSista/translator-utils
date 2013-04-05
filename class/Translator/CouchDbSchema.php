@@ -5,7 +5,6 @@ use Doctrine\CouchDB\View\DesignDocument;
 
 class CouchDbSchema implements DesignDocument
 {
-
     /**
      * Get design doc code
      *
@@ -28,45 +27,31 @@ class CouchDbSchema implements DesignDocument
     {
         return array(
             'views' => array(
-                "all_page_ids" => array(
-                    "map" => self::mapPageIds(),
+                "all_namespaces" => array(
+                    "map" => self::mapNamespaces(),
                     "reduce" => 'function (keys, values) {return null;}'
                 ),
-                'by_page_id' => array(
-                    "map" => self::mapDocumentsByPageId()
+                'by_namespace' => array(
+                    "map" => self::mapDocumentsByNamespace()
                 )
             )
         );
     }
 
-    private static function mapDocumentsByPageId()
+    private static function mapDocumentsByNamespace()
     {
         return <<<'CouchJS'
 function (doc) {
-    var pageId;
-    if (doc.pageTranslations) {
-        for (pageId in doc.pageTranslations) {
-            if (doc.pageTranslations.hasOwnProperty(pageId)) {
-                emit(pageId, doc);
-            }
-        }
-    }
+    emit(doc.namespace, doc);
 }
 CouchJS;
     }
 
-    private static function mapPageIds()
+    private static function mapNamespaces()
     {
         return <<<'CouchJS'
 function (doc) {
-    var pageId;
-    if (doc.pageTranslations) {
-        for (pageId in doc.pageTranslations) {
-            if (doc.pageTranslations.hasOwnProperty(pageId)) {
-                emit(pageId, null);
-            }
-        }
-    }
+    emit(doc.namespace, null);
 }
 CouchJS;
 

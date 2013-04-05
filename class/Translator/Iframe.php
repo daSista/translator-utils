@@ -11,25 +11,19 @@ class Iframe
     /**
      * @var string
      */
-    private $pageId;
+    private $locale;
 
-    /**
-     * @var string
-     */
-    private $language;
-
-    public function __construct($baseUri, $pageId, $language)
+    public function __construct($baseUri, $locale)
     {
         $this->baseUri = $baseUri;
-        $this->pageId = $pageId;
-        $this->language = $language;
+        $this->locale = $locale;
     }
 
     public function __toString()
     {
         return <<<HTML
 <iframe src="{$this->baseUri}" width="1" height="1" frameborder="0" id="translate"
-    onload="this.contentWindow.initTranslation('{$this->language}', '{$this->pageId}');"></iframe>
+    onload="this.contentWindow.initTranslation('{$this->locale}');"></iframe>
 HTML;
 
     }

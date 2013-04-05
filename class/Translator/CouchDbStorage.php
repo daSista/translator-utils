@@ -15,16 +15,12 @@ class CouchDbStorage
         $this->db = $dbConnection;
     }
 
-    public function registerTranslation($key, $pageId)
+    public function registerTranslation($key, $translation, $namespace = null)
     {
         $this->createDatabaseIfNeeded();
 
-        $response = $this->db->findDocument(md5($key));
-        $doc = $response->status === 404 ? self::newDoc($key) : $response->body;
-
-        if (!array_key_exists($pageId, $doc['pageTranslations'])) {
-            $doc['pageTranslations'][$pageId] = null;
-        }
+        $response = $this->db->findDocument(self::uniqueDbId($key, $namespace));
+        $doc = $response->status === 404 ? self::newDoc($key, $translation, $namespace) : $response->body;
 
         if (isset($doc['_rev'])) {
             $this->db->putDocument($doc, $doc['_id']);
@@ -33,32 +29,25 @@ class CouchDbStorage
         }
     }
 
-    public function readTranslations($pageId)
+    public function readTranslations($namespace = null)
     {
         $translations = array();
 
         if ($this->databaseExists()) {
 
-            $query = $this->db->createViewQuery('main', 'by_page_id');
-            $query->setKey($pageId);
+            $query = $this->db->createViewQuery('main', 'by_namespace');
+            $query->setKey($namespace);
 
             foreach ($query->execute() as $record) {
                 $doc = $record['value'];
-                $value = $doc['key'];
-                if (isset($doc['defaultTranslation'])) {
-                    $value = $doc['defaultTranslation'];
-                }
-                if (isset($doc['pageTranslations'][$pageId])) {
-                    $value = $doc['pageTranslations'][$pageId];
-                }
-                $translations[$doc['key']] = $value;
+                $translations[$doc['key']] = $doc['translation'];
             }
         }
 
         return $translations;
     }
 
-//--------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
     private function createDatabaseIfNeeded()
     {
@@ -73,13 +62,18 @@ class CouchDbStorage
         return in_array($this->db->getDatabase(), $this->db->getAllDatabases());
     }
 
-    private static function newDoc($key)
+    private static function newDoc($key, $translation, $namespace)
     {
         return array(
-            '_id' => md5($key),
+            '_id' => self::uniqueDbId($key, $namespace),
             'key' => $key,
-            'defaultTranslation' => null,
-            'pageTranslations' => array()
+            'translation' => $translation,
+            'namespace' => $namespace,
         );
+    }
+
+    private static function uniqueDbId($key, $namespace)
+    {
+        return md5($key . $namespace);
     }
 }

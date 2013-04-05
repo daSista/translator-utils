@@ -20,7 +20,8 @@
         }
     ],
     "require": {
-        "doctrine/couchdb": "dev-master"
+        "doctrine/couchdb": "dev-master",
+        "ext-intl": "*"
     },
     "require-dev": {
         "mockery/mockery": "0.7.*",

@@ -1,7 +1,10 @@
 <?php
 namespace Translator\Adapter;
 
-class Simple
+use Translator\Application;
+use Translator\String\Decorator;
+
+class Simple implements AdapterInterface
 {
     /**
      * @var string
@@ -9,49 +12,35 @@ class Simple
     private $translationMode;
 
     /**
-     * @var string
-     */
-    private $pageId;
-
-    /**
      * @var array key to value map
      */
     private $translations;
 
     /**
-     * @var \Translator\CouchDbStorage
-     */
-    private $driver;
-
-    /**
-     * @var \Translator\String\Decorator
+     * @var Decorator
      */
     private $testDecorator;
 
     /**
+     * @param array $translations
      * @param string $translationMode
-     * @param string $pageId
-     * @param \Translator\CouchDbStorage $driver
-     * @param null|\Translator\String\Decorator $testDecorator
+     * @param null|Decorator $testDecorator
      */
-    public function __construct($pageId, $driver, $translationMode = \Translator\Application::TRANSLATE_OFF,
+    public function __construct($translations, $translationMode = Application::TRANSLATE_OFF,
                                 $testDecorator = null)
     {
+        $this->translations = $translations;
         $this->translationMode = $translationMode;
-        $this->pageId = $pageId;
-        $this->driver = $driver;
         $this->testDecorator = $testDecorator;
-        $this->translations = $this->driver->readTranslations($pageId);
     }
 
-    public function translate($string)
+    public function translate($key, $params = array())
     {
-        $translation = array_key_exists($string, $this->translations) ?
-                $this->translations[$string] : $string;
+        $translation = array_key_exists($key, $this->translations) ?
+                $this->translations[$key] : $key;
 
-        if ($this->translationMode == \Translator\Application::TRANSLATE_ON) {
-            $this->driver->registerTranslation($string, $this->pageId);
-            return $this->decorator()->decorate($string, $translation);
+        if ($this->translationMode == Application::TRANSLATE_ON) {
+            return $this->decorator()->decorate($key, $translation);
         }
 
         return $translation;
@@ -61,7 +50,7 @@ class Simple
 
     private function decorator()
     {
-        return $this->testDecorator ?: new \Translator\String\Decorator();
+        return $this->testDecorator ?: new Decorator();
     }
 
 }
