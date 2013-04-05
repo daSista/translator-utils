@@ -1,0 +1,150 @@
+<h2 ng-cloak>
+    {{'orderNumber' | i18n : orderId : order.createdTimestamp }}
+    <span ng-show="order">
+        <span class="label" ng-hide="order.paid">{{'notPaid'|i18n}}</span>
+        <span class="label label-success" ng-show="order.paid">{{'paid'|i18n}}</span>
+    </span>
+</h2>
+
+<dl class="dl-horizontal">
+    <dt>{{'affiliate' | i18n}}</dt>
+    <dd>{{order.partnerName}}</dd>
+    <dt>{{'customerName' | i18n}}</dt>
+    <dd>{{order.customerName}}</dd>
+    <dt>{{'paidOn'|i18n}}</dt>
+    <dd>{{order.paymentTimestamp}}</dd>
+</dl>
+
+<div class="row">
+    <div class="span12">
+        <div class="well">
+            <table class="table" style="width:auto" ng-repeat="(offerName, tickets) in order.orderData.de.basket.tickets">
+                <caption class="left" style="text-align: left; white-space: nowrap"><h4>{{offerName}}</h4></caption>
+                <thead>
+                <tr>
+                    <th ng-show="tickets[0].tariff">{{'ticket:tariff'|i18n}}</th>
+                    <th ng-show="tickets[0].firstname">{{'ticket:firstname'|i18n}}</th>
+                    <th ng-show="tickets[0].lastname">{{'ticket:lastname'|i18n}}</th>
+                    <th ng-show="tickets[0].startDay">{{'ticket:startDate'|i18n}}</th>
+                    <th ng-show="tickets[0].class">{{'ticket:class'|i18n}}</th>
+                    <th ng-show="tickets[0].duration">{{'ticket:validity'|i18n}}</th>
+                    <th ng-show="tickets[0].discount">{{'ticket:discount'|i18n}}</th>
+                    <th ng-show="tickets[0].amount">{{'ticket:amount'|i18n}}</th>
+                    <th ng-show="tickets[0].price">{{'ticket:price'|i18n}}</th>
+                </tr>
+                </thead>
+                <tfoot ng-repeat="ticket in tickets">
+                <tr>
+                    <td ng-show="ticket.tariff">{{ticket.tariff}}</td>
+                    <td ng-show="ticket.firstname">{{ticket.firstname}}</td>
+                    <td ng-show="ticket.lastname">{{ticket.lastname}}</td>
+                    <td ng-show="ticket.startDay">{{ticket.startDay}}</td>
+                    <td ng-show="ticket.class">{{ticket.class}}</td>
+                    <td ng-show="ticket.duration">{{ticket.duration}}</td>
+                    <td ng-show="ticket.discount">{{ticket.discount}}</td>
+                    <td ng-show="ticket.amount">{{ticket.amount}}</td>
+                    <td ng-show="ticket.price">{{ticket.price}}</td>
+                </tr>
+                <tr ng-repeat="related in ticket.relatedTickets">
+                    <td>{{related.cardName}}</td>
+                    <td>{{related.startDay}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{related.discount}}</td>
+                    <td>{{related.price}}</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div ng-repeat="orderData in [order.orderData.de]">
+    <div class="row">
+        <div class="span6">
+            <div class="well">
+                <h4>{{'order/billing:addressTitle'|i18n}}</h4>
+                <ng-include src="'partials/order/address.html'"
+                            ng-repeat="address in [orderData.billingAddress]"></ng-include>
+            </div>
+        </div>
+        <div class="span6">
+            <div class="well">
+                <h4>{{'order/delivery:addressTitle'|i18n}}</h4>
+                <ng-include src="'partials/order/address.html'"
+                            ng-repeat="address in [orderData.deliveryAddress]"></ng-include>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <div class="well">
+                <h4>{{'order/delivery:information'|i18n}}</h4>
+                <table class="table table-condensed">
+                    <tr>
+                        <th>{{'order/delivery:type'|i18n}}</th>
+                        <td>{{orderData.deliveryType.description}}</td>
+                    </tr>
+                    <tfoot ng-show="orderData.flightInformation">
+                    <tr>
+                        <th>{{'order/delivery:flightArrivalDate'|i18n}}</th>
+                        <td>{{orderData.flightInformation.arrivalDate}}</td>
+                    </tr>
+                    <tr>
+                        <th>{{'order/delivery:flightNumber'|i18n}}</th>
+                        <td>{{orderData.flightInformation.flightNo}}</td>
+                    </tr>
+                    <tr>
+                        <th>{{'order/delivery:flightArrivalTime'|i18n}}</th>
+                        <td>{{orderData.flightInformation.arrivalTime}}</td>
+                    </tr>
+                    <tr>
+                        <th>{{'order/delivery:flightFrom'|i18n}}</th>
+                        <td>{{orderData.flightInformation.from}}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="span6" ng-show="orderData.notes">
+            <div class="well">
+                <h4>{{'order:notes'|i18n}}</h4>
+                <p>{{orderData.notes}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <div class="well">
+                <h4>{{'order:totalsTitle'|i18n}}</h4>
+                <table class="table table-condensed">
+                    <tr>
+                        <th>{{'order:subtotal'|i18n}}</th>
+                        <td>{{orderData.subTotal}}</td>
+                    </tr>
+                    <tr>
+                        <th>{{'order:deliveryFee'|i18n}}</th>
+                        <td>{{orderData.delivery}}</td>
+                    </tr>
+                    <tr>
+                        <th>{{'order:paymentFee'|i18n}}</th>
+                        <td>{{orderData.paymentFee}} ({{orderData.paymentTypeName}})</td>
+                    </tr>
+                    <tr>
+                        <th>{{'order:bookingFee'|i18n}}</th>
+                        <td>{{orderData.bookingFee}}</td>
+                    </tr>
+                    <tr>
+                        <th><h4>{{'order:total'|i18n}}</h4></th>
+                        <td><h4>{{orderData.total}}</h4></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <a class="btn" href="/order/bbi/{{orderId}}.bbi">{{'downloadBBI'|i18n}}</a>
+    <a class="btn" href="#/order">{{'backToList'|i18n}}</a>
+</div>
