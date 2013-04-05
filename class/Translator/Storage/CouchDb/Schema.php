@@ -42,7 +42,15 @@ class Schema implements DesignDocument
     {
         return <<<'CouchJS'
 function (doc) {
-    emit(doc.namespace, doc);
+    var i, combinedNs;
+    if (doc.namespace) {
+        combinedNs = '';
+        for (i = 0; i < doc.namespace.length; i++) {
+            combinedNs = combinedNs + doc.namespace[i];
+            emit(combinedNs, doc);
+            combinedNs = combinedNs + '/'
+        }
+    }
 }
 CouchJS;
     }

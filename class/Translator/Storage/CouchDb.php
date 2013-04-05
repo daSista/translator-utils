@@ -3,7 +3,7 @@ namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
 
-class CouchDb
+class CouchDb implements StorageInterface
 {
     /**
      * @var \Doctrine\CouchDB\CouchDBClient
@@ -80,7 +80,7 @@ class CouchDb
     private static function singleTranslation($doc)
     {
         return array(
-            ($doc['namespace'] ? $doc['namespace'] . ':' : '') . $doc['key'] => $doc['translation']
+            ($doc['namespace'] ? join('/', $doc['namespace']) . ':' : '') . $doc['key'] => $doc['translation']
         );
     }
 
@@ -103,7 +103,7 @@ class CouchDb
             '_id' => self::uniqueDbId($key, $namespace),
             'key' => $key,
             'translation' => $translation,
-            'namespace' => $namespace,
+            'namespace' => array_filter(explode('/', $namespace)) ?: null,
         );
     }
 

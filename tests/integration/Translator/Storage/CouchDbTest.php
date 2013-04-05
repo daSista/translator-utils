@@ -37,6 +37,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
         $this->assertEquals(
             array(
+                'validation:email' => 'Email',
                 'validation/error:notEmpty' => 'Should be not empty',
                 'validation/error:emailFormat' => 'Email format is incorrect',
                 'pager:pageXFromY' => 'Page %d from $d',
@@ -47,10 +48,26 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         );
     }
 
+    public function testReadsTranslationsOfSubNamespaces()
+    {
+        self::fillInStorage();
+
+        $this->assertEquals(
+            array(
+                'validation:email' => 'Email',
+                'validation/error:notEmpty' => 'Should be not empty',
+                'validation/error:emailFormat' => 'Email format is incorrect',
+            ),
+            self::storage()->readTranslations('validation')
+        );
+
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function fillInStorage()
     {
+        self::storage()->registerTranslation('email', 'Email', 'validation');
         self::storage()->registerTranslation('notEmpty', 'Should be not empty', 'validation/error');
         self::storage()->registerTranslation('emailFormat', 'Email format is incorrect', 'validation/error');
         self::storage()->registerTranslation('pageXFromY', 'Page %d from $d', 'pager');
