@@ -2,19 +2,19 @@
 
 namespace Translator\Storage;
 
+use Translator\String;
+
 interface StorageInterface
 {
     /**
-     * @param string $key
-     * @param string $translation
-     * @param null|string $namespace
+     * @param String $string
      * @return void
      */
-    public function registerTranslation($key, $translation, $namespace = null);
+    public function registerString($string);
 
     /**
      * @param null|string $namespace
      * @return array key to value map
      */
-    public function readTranslations($namespace = null);
+    public function mappedTranslations($namespace = null);
 }

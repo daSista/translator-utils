@@ -2,6 +2,7 @@
 namespace Translator\Storage;
 
 use Translator\Test\CouchDbTestCase;
+use Translator\String;
 
 class CouchDbIntegrationTest extends CouchDbTestCase
 {
@@ -14,7 +15,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
                 'validation/error:notEmpty' => 'Should be not empty',
                 'validation/error:emailFormat' => 'Email format is incorrect'
             ),
-            self::storage()->readTranslations('validation/error')
+            self::storage()->mappedTranslations('validation/error')
         );
 
         $this->assertEquals(
@@ -22,13 +23,13 @@ class CouchDbIntegrationTest extends CouchDbTestCase
                 'pager:pageXFromY' => 'Page %d from $d',
                 'pager:totalAmountOfPages' => 'Total %d page(s)'
             ),
-            self::storage()->readTranslations('pager')
+            self::storage()->mappedTranslations('pager')
         );
     }
 
     public function testSurvivesWhenThereAreNoTranslation()
     {
-        self::storage()->readTranslations('some/namespace');
+        self::storage()->mappedTranslations('some/namespace');
     }
 
     public function testReadsAllTranslations()
@@ -44,7 +45,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
                 'pager:totalAmountOfPages' => 'Total %d page(s)',
                 'yes' => 'Yes'
             ),
-            self::storage()->readTranslations()
+            self::storage()->mappedTranslations()
         );
     }
 
@@ -58,7 +59,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
                 'validation/error:notEmpty' => 'Should be not empty',
                 'validation/error:emailFormat' => 'Email format is incorrect',
             ),
-            self::storage()->readTranslations('validation')
+            self::storage()->mappedTranslations('validation')
         );
 
     }
@@ -67,12 +68,12 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     private static function fillInStorage()
     {
-        self::storage()->registerTranslation('email', 'Email', 'validation');
-        self::storage()->registerTranslation('notEmpty', 'Should be not empty', 'validation/error');
-        self::storage()->registerTranslation('emailFormat', 'Email format is incorrect', 'validation/error');
-        self::storage()->registerTranslation('pageXFromY', 'Page %d from $d', 'pager');
-        self::storage()->registerTranslation('totalAmountOfPages', 'Total %d page(s)', 'pager');
-        self::storage()->registerTranslation('yes', 'Yes');
+        self::storage()->registerString(String::create('validation:email', 'Email'));
+        self::storage()->registerString(String::create('validation/error:notEmpty', 'Should be not empty'));
+        self::storage()->registerString(String::create('validation/error:emailFormat', 'Email format is incorrect'));
+        self::storage()->registerString(String::create('pager:pageXFromY', 'Page %d from $d'));
+        self::storage()->registerString(String::create('pager:totalAmountOfPages', 'Total %d page(s)'));
+        self::storage()->registerString(String::create('yes', 'Yes'));
     }
 
     private static function storage()

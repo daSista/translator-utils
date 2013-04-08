@@ -3,6 +3,7 @@
 namespace Translator\SourceCode;
 
 use Translator\Storage\StorageInterface;
+use Translator\String;
 
 class Crawler
 {
@@ -46,11 +47,7 @@ class Crawler
     private function registerAllTranslations(array $translations, $path)
     {
         foreach ($this->translateFinder->select($path) as $keyWithNamespace => $parameters) {
-            $this->storage->registerTranslation(
-                self::keyPart($keyWithNamespace),
-                self::translate($keyWithNamespace, $translations),
-                self::namespacePart($keyWithNamespace)
-            );
+            $this->storage->registerString(String::find($keyWithNamespace, $translations));
         }
     }
 
@@ -73,36 +70,5 @@ class Crawler
             }
         }
         return $result;
-    }
-
-    private static function keyPart($keyWithNamespace)
-    {
-        return strrpos($keyWithNamespace, ':') !== false ?
-            substr($keyWithNamespace, strrpos($keyWithNamespace, ':') + 1) : $keyWithNamespace;
-    }
-
-    private static function namespacePart($keyWithNamespace)
-    {
-        return strrpos($keyWithNamespace, ':') !== false ?
-            substr($keyWithNamespace, 0, strrpos($keyWithNamespace, ':')) : null;
-    }
-
-    private static function translate($keyWithNamespace, $translations)
-    {
-        $readFrom = $translations;
-        foreach (array_filter(explode('/', self::namespacePart($keyWithNamespace))) as $ns) {
-            if (array_key_exists($ns, $readFrom)) {
-                $readFrom = $readFrom[$ns];
-            } else {
-                break;
-            }
-        }
-        return array_key_exists(self::keyPart($keyWithNamespace), $readFrom) ?
-            $readFrom[self::keyPart($keyWithNamespace)] : self::draftTranslation($keyWithNamespace);
-    }
-
-    private static function draftTranslation($keyWithNamespace)
-    {
-        return str_replace(array('/', ':'), ' ', $keyWithNamespace);
     }
 }

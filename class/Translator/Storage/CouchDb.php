@@ -2,11 +2,12 @@
 namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
+use Translator\String;
 
 class CouchDb implements StorageInterface
 {
     /**
-     * @var \Doctrine\CouchDB\CouchDBClient
+     * @var CouchDBClient
      */
     private $db;
 
@@ -15,13 +16,16 @@ class CouchDb implements StorageInterface
         $this->db = $dbConnection;
     }
 
-    public function registerTranslation($key, $translation, $namespace = null)
+    /**
+     * @param String $string
+     */
+    public function registerString($string)
     {
         $this->createDatabaseIfNeeded();
 
         /** @var $response \Doctrine\CouchDB\HTTP\Response */
-        $response = $this->db->findDocument(self::uniqueDbId($key, $namespace));
-        $doc = $response->status === 404 ? self::newDoc($key, $translation, $namespace) : $response->body;
+        $response = $this->db->findDocument($string->id());
+        $doc = $response->status === 404 ? $string->asDocument() : $response->body;
 
         if (isset($doc['_rev'])) {
             $this->db->putDocument($doc, $doc['_id']);
@@ -30,7 +34,7 @@ class CouchDb implements StorageInterface
         }
     }
 
-    public function readTranslations($namespace = null)
+    public function mappedTranslations($namespace = null)
     {
         if ($this->databaseExists()) {
             return $this->queryView($namespace ?: '');
@@ -78,20 +82,5 @@ class CouchDb implements StorageInterface
     private function databaseExists()
     {
         return in_array($this->db->getDatabase(), $this->db->getAllDatabases());
-    }
-
-    private static function newDoc($key, $translation, $namespace)
-    {
-        return array(
-            '_id' => self::uniqueDbId($key, $namespace),
-            'key' => $key,
-            'translation' => $translation,
-            'namespace' => array_filter(explode('/', $namespace)) ?: null,
-        );
-    }
-
-    private static function uniqueDbId($key, $namespace)
-    {
-        return md5($key . $namespace);
     }
 }

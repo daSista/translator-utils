@@ -3,6 +3,7 @@
 namespace Translator\SourceCode;
 
 use Translator\SourceCode\TranslateIterator\AngularView;
+use Translator\String;
 use org\bovigo\vfs\vfsStream;
 use Mockery as m;
 
@@ -27,9 +28,12 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testCrawlsThroughTheFilesystemRegisteringTranslations()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerTranslation')->with('title', 'The title', null)->once();
-        $storage->shouldReceive('registerTranslation')->with('title', 'Order details title', 'order/details')->once();
-        $storage->shouldReceive('registerTranslation')->with('agb', 'Terms and conditions', null)->once();
+        $storage->shouldReceive('registerString')
+            ->with(equalTo(new String('title', 'The title')))->once();
+        $storage->shouldReceive('registerString')
+            ->with(equalTo(new String('title', 'Order details title', 'order/details')))->once();
+        $storage->shouldReceive('registerString')
+            ->with(equalTo(new String('agb', 'Terms and conditions')))->once();
 
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), self::translations(), '.html');
     }
@@ -37,8 +41,9 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testWorksWellWhenTranslationIsntDefined()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerTranslation')->with('title', 'order details title', 'order/details')->once();
-        $storage->shouldReceive('registerTranslation');
+        $storage->shouldReceive('registerString')
+            ->with(equalTo(new String('title', 'order details title', 'order/details')))->once();
+        $storage->shouldReceive('registerString');
 
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), array(), '.html');
     }
@@ -46,14 +51,14 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testWorksWellWhenTranslationsAreNotFound()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerTranslation')->never();
+        $storage->shouldReceive('registerString')->never();
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates/empty')), array(), '.html');
     }
 
     public function testFiltersFilesByExtension()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerTranslation')->never();
+        $storage->shouldReceive('registerString')->never();
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), array(), '.tmpl');
     }
 

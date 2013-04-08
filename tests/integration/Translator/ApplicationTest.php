@@ -29,7 +29,7 @@ class ApplicationIntegrationTest extends CouchDbTestCase
 
         return new Application(
             '/translator',
-            new Simple($translationsStorage->readTranslations(), Application::TRANSLATE_ON),
+            new Simple($translationsStorage->mappedTranslations(), Application::TRANSLATE_ON),
             Application::TRANSLATE_ON
         );
     }
