@@ -33,7 +33,7 @@ class CouchDb implements StorageInterface
     public function readTranslations($namespace = null)
     {
         if ($this->databaseExists()) {
-            return $namespace ? $this->queryView($namespace) :  $this->queryAllDocs();
+            return $this->queryView($namespace ?: '');
         }
 
         return array();
@@ -53,23 +53,6 @@ class CouchDb implements StorageInterface
             $translations = array_merge($translations, self::singleTranslation($doc));
         }
 
-        return $translations;
-    }
-
-    private function queryAllDocs()
-    {
-        $translations = array();
-
-        /** @var $response \Doctrine\CouchDB\HTTP\Response */
-        $response = $this->db->allDocs();
-        if ($response->status === 200) {
-            foreach ($response->body['rows'] as $row) {
-                if (array_key_exists('translation', $row['doc'])) {
-                    $translations = array_merge($translations, self::singleTranslation($row['doc']));
-                }
-            }
-        }
-        
         return $translations;
     }
 

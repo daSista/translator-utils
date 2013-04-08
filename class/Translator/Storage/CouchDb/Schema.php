@@ -51,6 +51,7 @@ function (doc) {
             combinedNs = combinedNs + '/'
         }
     }
+    emit('', doc);
 }
 CouchJS;
     }
