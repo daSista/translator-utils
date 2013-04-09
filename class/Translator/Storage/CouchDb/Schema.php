@@ -5,6 +5,13 @@ use Doctrine\CouchDB\View\DesignDocument;
 
 class Schema implements DesignDocument
 {
+    private $language;
+
+    public function __construct($locale)
+    {
+        $this->language = strtolower(substr($locale, 0, 2));
+    }
+
     /**
      * Get design doc code
      *
@@ -28,7 +35,9 @@ class Schema implements DesignDocument
         return array(
             "lib" => array(
                 "messageformat" => file_get_contents(__DIR__ . '/lib/messageformat/messageformat.js'),
-                "locale" => file_get_contents(__DIR__ . '/lib/messageformat/locale/en.js')
+                "locale" => 'module.exports = function(MessageFormat){'
+                    . file_get_contents(__DIR__ . "/lib/messageformat/locale/{$this->language}.js")
+                    . '};'
             ),
             'views' => array(
                 "all_namespaces" => array(
@@ -40,7 +49,7 @@ class Schema implements DesignDocument
                 )
             ),
             'lists' => array(
-                'compiled' => self::jsCompilationFunc()
+                'compiled' => self::jsCompilationFunc($this->language)
             )
         );
     }
@@ -81,13 +90,17 @@ CouchJS;
 
     }
 
-    private static function jsCompilationFunc()
+    private static function jsCompilationFunc($language)
     {
-        return <<<'CouchJS'
+        return <<<CouchJS
 function(doc, req) {
     provides("js", function() {
-        var MessageFormat = require('lib/messageformat'), js = '', mf = new MessageFormat('en'), string,
-            declaredNamespaces = {}, declaredStrings = {};
+        var MessageFormat = require('lib/messageformat'),
+            js = '',
+            mf = new MessageFormat('{$language}', require('lib/locale')(MessageFormat)),
+            string,
+            declaredNamespaces = {},
+            declaredStrings = {};
 
         while (row = getRow()) {
             string = row.value;
@@ -96,22 +109,22 @@ function(doc, req) {
                 declaredStrings[string._id] = 1;
 
                 if (string.namespace && string.namespace.length && !declaredNamespaces[string.namespace.join('/')]) {
-                    js = js + 'g.i18n[\'' + string.namespace.join('/') + '\'] = {};\n';
+                    js = js + 'g.i18n[\\'' + string.namespace.join('/') + '\\'] = {};\\n';
                     declaredNamespaces[string.namespace.join('/')] = 1;
                 }
 
                 js = js + 'g.i18n';
 
                 if (string.namespace && string.namespace.length) {
-                    js = js + '[\'' + string.namespace.join('/') + '\']';
+                    js = js + '[\\'' + string.namespace.join('/') + '\\']';
                 }
-                js = js + '[\'' + string.key + '\'] = '
+                js = js + '[\\'' + string.key + '\\'] = '
                     + mf.precompile(mf.parse(string.translation))
-                    + ';\n';
+                    + ';\\n';
             }
         }
 
-        return  '(function(g){' + 'g.i18n = {};\n' + js + '})(window);';
+        return  '(function(g){' + 'g.i18n = {};\\n' + js + '})(window);';
     });
 }
 CouchJS;

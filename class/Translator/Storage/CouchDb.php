@@ -6,14 +6,17 @@ use Translator\String;
 
 class CouchDb implements StorageInterface
 {
+    private $locale;
+
     /**
      * @var CouchDBClient
      */
     private $db;
 
-    public function __construct($dbConnection)
+    public function __construct($dbConnection, $locale)
     {
         $this->db = $dbConnection;
+        $this->locale = $locale;
     }
 
     /**
@@ -75,7 +78,7 @@ class CouchDb implements StorageInterface
     {
         if (!$this->databaseExists()) {
             $this->db->createDatabase($this->db->getDatabase());
-            $this->db->createDesignDocument('main', new CouchDb\Schema());
+            $this->db->createDesignDocument('main', new CouchDb\Schema($this->locale));
         }
     }
 

@@ -37,6 +37,6 @@ abstract class CouchDbTestCase extends \PHPUnit_Framework_TestCase
 
     protected static function storage()
     {
-        return new CouchDb(self::db());
+        return new CouchDb(self::db(), 'en_US');
     }
 }
