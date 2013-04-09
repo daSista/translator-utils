@@ -66,18 +66,4 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
 //----------------------------------------------------------------------------------------------------------------------
 
-    private static function fillInStorage()
-    {
-        self::storage()->registerString(String::create('validation:email', 'Email'));
-        self::storage()->registerString(String::create('validation/error:notEmpty', 'Should be not empty'));
-        self::storage()->registerString(String::create('validation/error:emailFormat', 'Email format is incorrect'));
-        self::storage()->registerString(String::create('pager:pageXFromY', 'Page %d from $d'));
-        self::storage()->registerString(String::create('pager:totalAmountOfPages', 'Total %d page(s)'));
-        self::storage()->registerString(String::create('yes', 'Yes'));
-    }
-
-    private static function storage()
-    {
-        return new CouchDb(self::db());
-    }
 }

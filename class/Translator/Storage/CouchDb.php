@@ -49,7 +49,7 @@ class CouchDb implements StorageInterface
     {
         $translations = array();
 
-        $query = $this->db->createViewQuery('main', 'by_namespace');
+        $query = $this->db->createViewQuery('main', 'translations');
         $query->setKey($namespace);
 
         foreach ($query->execute() as $record) {
