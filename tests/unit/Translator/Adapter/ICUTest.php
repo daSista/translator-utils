@@ -2,6 +2,9 @@
 
 namespace Translator\Adapter;
 
+use Mockery as m;
+use Translator\Application;
+
 class ICUTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -62,9 +65,17 @@ class ICUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('notDefined', self::adapter()->translate('notDefined'));
     }
 
+    public function testDecoratesStringInTranslationMode()
+    {
+        $decorator = m::mock();
+        $decorator->shouldReceive('decorate')->once();
+        self::adapter(null, null, $decorator)->translate('foo');
+
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
-    private static function adapter($translations = null, $locale = null)
+    private static function adapter($translations = null, $locale = null, $decorator = null)
     {
         return new ICU($translations ?: array(
             'foundSummary' => <<<ICU
@@ -82,7 +93,9 @@ class ICUTest extends \PHPUnit_Framework_TestCase
              }
 ICU
             ),
-            $locale ?: 'en_US'
+            $locale ?: 'en_US',
+            is_null($decorator) ? Application::TRANSLATE_OFF : Application::TRANSLATE_ON,
+            $decorator
         );
     }
 
