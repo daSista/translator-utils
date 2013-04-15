@@ -13,7 +13,7 @@ class SchemaTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertContains(
             'new MessageFormat(\'en\'',
-            $design['lists']['compiled']
+            $design['lists']['js']
         );
     }
 }

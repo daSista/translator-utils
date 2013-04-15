@@ -49,7 +49,8 @@ class Schema implements DesignDocument
                 )
             ),
             'lists' => array(
-                'compiled' => self::jsCompilationFunc($this->language)
+                'js' => self::jsCompilationFunc($this->language),
+                'po' => self::poCompilationFunc($this->language)
             )
         );
     }
@@ -125,6 +126,58 @@ function(doc, req) {
         }
 
         return  '(function(g){' + 'g.i18n = {};\\n' + js + '})(window);';
+    });
+}
+CouchJS;
+
+    }
+
+    private static function poCompilationFunc($language)
+    {
+        return <<<CouchJS
+function(doc, req) {
+    provides("text", function() {
+        var po = '',
+            msgid,
+            string,
+            declaredStrings = {},
+            enquote = function(str) {
+                return str.replace(new RegExp("[\\"\\\\\\\\]", "g"), "\\\\$&");
+            },
+            miltiLine = function(str) {
+                var i, parts = str.split("\\n"), msg = "msgstr \\"\\"\\n";
+
+                for (var i=0; i < parts.length; i++) {
+                    msg = msg + "\\""
+                        + enquote(parts[i])
+                        + (i + 1 === parts.length ? "" : "\\\\n")
+                        + "\\"\\n";
+                }
+                return msg;
+            };
+
+        while (row = getRow()) {
+            string = row.value;
+
+            if (string.key && !declaredStrings[string._id]) {
+                declaredStrings[string._id] = 1;
+
+                po = po + '\\n';
+
+                if (string.namespace && string.namespace.length) {
+                    po = po + 'msgctxt "' + enquote(string.namespace.join('/')) + '"\\n';
+                }
+
+                po = po + 'msgid "' + enquote(string.key)  + '"\\n';
+                if (string.translation.indexOf('\\n') !== -1) {
+                    po = po + miltiLine(string.translation);
+                } else {
+                    po = po + 'msgstr "' + enquote(string.translation) + '"\\n';
+                }
+            }
+        }
+
+        return  po;
     });
 }
 CouchJS;
