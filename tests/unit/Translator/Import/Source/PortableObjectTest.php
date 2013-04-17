@@ -29,15 +29,15 @@ PO
 
         $this->assertEquals(
             array(
-                'yes' => 'Yes',
-                'hello' => 'Hello!',
-                'long' => <<<'TEXT'
+                'yes' => array('Yes'),
+                'hello' => array('Hello!'),
+                'long' => array(<<<'TEXT'
 This is first line
 And this is second
 And "this" is \ quoted
 TEXT
-                ,
-                'quoted' => 'Quoted \ string "hehe"'
+                ),
+                'quoted' => array('Quoted \ string "hehe"')
             ),
             $translations
         );
@@ -60,11 +60,12 @@ PO
 
         $this->assertEquals(
             array(
-                'general/diverses:hello' => 'Hello!',
-                'general:long' => <<<'TEXT'
+                'general/diverses:hello' => array('Hello!'),
+                'general:long' => array(<<<'TEXT'
 This is first line
 And this is second
 TEXT
+                )
             ),
             $translations
         );
@@ -82,11 +83,36 @@ PO
 
         $this->assertEquals(
             array(
-                'Unknown system error' => 'Error desconegut del sistema',
+                'Unknown system error' => array('Error desconegut del sistema'),
             ),
             $translations
         );
 
+    }
+
+    public function testExtractsDescription()
+    {
+        $translations = self::iterate(<<<'PO'
+
+#. this string needed
+#. for special case
+msgid "Unknown system error"
+msgstr "Error desconegut del sistema"
+PO
+        );
+
+        $this->assertEquals(
+            array(
+                'Unknown system error' => array(
+                    'Error desconegut del sistema',
+                    <<<'DESC'
+this string needed
+for special case
+DESC
+                ),
+            ),
+            $translations
+        );
     }
 
 //----------------------------------------------------------------------------------------------------------------------

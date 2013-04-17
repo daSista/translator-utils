@@ -43,20 +43,22 @@ class PortableObject implements SourceInterface
 
     private static function interpret($buffer)
     {
-        //echo "\n" . $buffer . "\n\n";
-
-        list($buffer, $msgid) = self::readMsgId($buffer);
-        list($buffer, $msgstr) = self::readMsgStr($buffer);
-        list($buffer, $msgctxt) = self::readMsgContext($buffer);
-
-        return $msgid ? array($msgctxt ? $msgctxt . ':' . $msgid : $msgid => $msgstr) : array();
+        list($buffer, $msgid) = self::readId($buffer);
+        list($buffer, $msgstr) = self::readStr($buffer);
+        list($buffer, $msgctxt) = self::readContext($buffer);
+        list($buffer, $comment) = self::readComment($buffer);
+        $info = array($msgstr);
+        if (!is_null($comment)) {
+            $info[] = $comment;
+        }
+        return $msgid ? array($msgctxt ? $msgctxt . ':' . $msgid : $msgid => $info) : array();
     }
 
-    private static function readMsgId($buffer)
+    private static function readId($buffer)
     {
         $lines = explode("\n", $buffer);
         foreach ($lines as $idx => $line) {
-            if (preg_match('/\s*msgid\s+"(.*)"\s*$/i', $line, $matches)) {
+            if (preg_match('/^\s*msgid\s+"(.*)"\s*$/i', $line, $matches)) {
                 unset($lines[$idx]);
                 return array(join("\n", $lines), stripslashes($matches[1]));
             }
@@ -64,7 +66,7 @@ class PortableObject implements SourceInterface
         return array($buffer, null);
     }
 
-    private static function readMsgStr($buffer)
+    private static function readStr($buffer)
     {
         $lines = explode("\n", $buffer);
 
@@ -78,7 +80,8 @@ class PortableObject implements SourceInterface
         }
         if (!is_null($msgStartIndex)) {
             // read first line
-            $string = preg_match('/\s*msgstr\s+"(.*)"\s*$/i', $lines[$msgStartIndex], $matches) ? stripslashes($matches[1]) : "";
+            $string = preg_match('/^\s*msgstr\s+"(.*)"\s*$/i', $lines[$msgStartIndex], $matches) ?
+                stripslashes($matches[1]) : "";
             unset($lines[$msgStartIndex]);
 
             // read and concatenate the rest
@@ -97,16 +100,29 @@ class PortableObject implements SourceInterface
         return array(join("\n", $lines), $string);
     }
 
-    private static function readMsgContext($buffer)
+    private static function readContext($buffer)
     {
         $lines = explode("\n", $buffer);
         foreach ($lines as $idx => $line) {
-            if (preg_match('/\s*msgctxt\s+"(.*)"\s*$/i', $line, $matches)) {
+            if (preg_match('/^\s*msgctxt\s+"(.*)"\s*$/i', $line, $matches)) {
                 unset($lines[$idx]);
                 return array(join("\n", $lines), stripslashes($matches[1]));
             }
         }
 
         return array(join("\n", $lines), null);
+    }
+
+    private static function readComment($buffer) {
+        $lines = explode("\n", $buffer);
+        $commentLines = array();
+        foreach ($lines as $idx => $line) {
+            if (preg_match('/^\s*#\. (.*)$/i', $line, $matches)) {
+                unset($lines[$idx]);
+                $commentLines[] = $matches[1];
+            }
+        }
+
+        return array(join("\n", $lines), count($commentLines) ? join("\n", $commentLines) : null);
     }
 }

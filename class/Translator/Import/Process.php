@@ -19,8 +19,9 @@ class Process
 
     public function run($source)
     {
-        foreach ($source as $keyWithNamespace => $translation) {
-            $this->storage->registerString(String::create($keyWithNamespace, $translation));
+        foreach ($source as $keyWithNamespace => $info) {
+            list($translation, $description) = array_merge($info, array(null, null));
+            $this->storage->registerString(String::create($keyWithNamespace, $translation, $description));
         }
     }
 }
