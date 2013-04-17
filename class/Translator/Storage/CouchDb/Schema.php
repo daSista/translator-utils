@@ -50,7 +50,7 @@ class Schema implements DesignDocument
             ),
             'lists' => array(
                 'js' => self::jsCompilationFunc($this->language),
-                'po' => self::poCompilationFunc($this->language)
+                'po' => self::poCompilationFunc()
             )
         );
     }
@@ -132,7 +132,7 @@ CouchJS;
 
     }
 
-    private static function poCompilationFunc($language)
+    private static function poCompilationFunc()
     {
         return <<<CouchJS
 function(doc, req) {
@@ -144,7 +144,7 @@ function(doc, req) {
             enquote = function(str) {
                 return str.replace(new RegExp("[\\"\\\\\\\\]", "g"), "\\\\$&");
             },
-            miltiLine = function(str) {
+            miltiLineTranslation = function(str) {
                 var i, parts = str.split("\\n"), msg = "msgstr \\"\\"\\n";
 
                 for (var i=0; i < parts.length; i++) {
@@ -154,6 +154,13 @@ function(doc, req) {
                         + "\\"\\n";
                 }
                 return msg;
+            },
+            miltiLineDescription = function(str) {
+                var i, parts = str.split("\\n"), descr = "";
+                for (var i=0; i < parts.length; i++) {
+                    descr = descr + "#. " + parts[i] + "\\n";
+                }
+                return descr;
             };
 
         while (row = getRow()) {
@@ -164,13 +171,17 @@ function(doc, req) {
 
                 po = po + '\\n';
 
+                if (string.description && string.description.length) {
+                    po = po + miltiLineDescription(string.description);
+                }
+
                 if (string.namespace && string.namespace.length) {
                     po = po + 'msgctxt "' + enquote(string.namespace.join('/')) + '"\\n';
                 }
 
                 po = po + 'msgid "' + enquote(string.key)  + '"\\n';
                 if (string.translation.indexOf('\\n') !== -1) {
-                    po = po + miltiLine(string.translation);
+                    po = po + miltiLineTranslation(string.translation);
                 } else {
                     po = po + 'msgstr "' + enquote(string.translation) + '"\\n';
                 }

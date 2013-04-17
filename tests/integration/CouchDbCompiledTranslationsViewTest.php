@@ -100,4 +100,29 @@ PO
             $response->body
         );
     }
+
+    public function testIncludesDescriptionIntoPOComments()
+    {
+        self::storage()->registerString(
+            String::create('Unknown system error', 'Error desconegut del sistema', <<<'DESC'
+this string needed
+for special case
+DESC
+            )
+        );
+        $http = new HttpClient();
+        $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/po/translations', null, true);
+
+        $this->assertEquals(<<<'PO'
+
+#. this string needed
+#. for special case
+msgid "Unknown system error"
+msgstr "Error desconegut del sistema"
+
+PO
+            ,
+            $response->body
+        );
+    }
 }
