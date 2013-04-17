@@ -10,12 +10,19 @@ class String
 
     private $namespace;
 
-    public static function create($keyWithNamespace, $translation)
+    private $description;
+
+    public static function create($keyWithNamespace, $translation, $description = null)
     {
-        return new self(self::keyPart($keyWithNamespace), $translation, self::namespacePart($keyWithNamespace));
+        return new self(
+            self::keyPart($keyWithNamespace),
+            $translation,
+            self::namespacePart($keyWithNamespace),
+            $description
+        );
     }
 
-    public static function find($keyWithNamespace, array $translations)
+    public static function find($keyWithNamespace, array $translations, $description = null)
     {
         $key = self::keyPart($keyWithNamespace);
         $namespace = self::namespacePart($keyWithNamespace);
@@ -30,14 +37,15 @@ class String
         }
         $translation = array_key_exists($key, $readFrom) ? $readFrom[$key] : self::draftTranslation($keyWithNamespace);
 
-        return new self($key, $translation, $namespace);
+        return new self($key, $translation, $namespace, $description);
     }
 
-    public function __construct($key, $translation, $namespace = null)
+    public function __construct($key, $translation, $namespace = null, $description = null)
     {
         $this->key = $key;
         $this->translation = $translation;
         $this->namespace = $namespace;
+        $this->description = $description;
     }
 
     public function id()
@@ -57,12 +65,16 @@ class String
 
     public function asDocument()
     {
-        return array(
+        $doc = array(
             '_id' => $this->id(),
             'key' => $this->key,
             'translation' => $this->translation,
             'namespace' => array_filter(explode('/', $this->namespace)) ?: null,
         );
+        if (!is_null($this->description)) {
+            $doc['description'] = $this->description;
+        }
+        return $doc;
     }
 
     public function __toString()
