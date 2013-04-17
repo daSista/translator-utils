@@ -64,6 +64,16 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    public function testUpdatesExistingStringPreservingDescription()
+    {
+        $stringWithDescription = String::create('validation:email', 'Email', 'Validation message');
+        $stringWithoutDescription = String::create('validation:email', 'email:');
+        self::storage()->registerString($stringWithDescription);
+        self::storage()->registerString($stringWithoutDescription);
 
+        $doc = self::db()->findDocument($stringWithDescription->id());
+
+        $this->assertEquals('email:', $doc->body['translation']);
+        $this->assertEquals('Validation message', $doc->body['description']);
+    }
 }

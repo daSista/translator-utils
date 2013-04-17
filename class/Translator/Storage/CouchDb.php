@@ -28,7 +28,7 @@ class CouchDb implements StorageInterface
 
         /** @var $response \Doctrine\CouchDB\HTTP\Response */
         $response = $this->db->findDocument($string->id());
-        $doc = $response->status === 404 ? $string->asDocument() : $response->body;
+        $doc = $response->status === 404 ? $string->asDocument() : array_merge($response->body, $string->asDocument());
 
         if (isset($doc['_rev'])) {
             $this->db->putDocument($doc, $doc['_id']);
