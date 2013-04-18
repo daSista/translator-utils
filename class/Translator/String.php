@@ -22,22 +22,19 @@ class String
         );
     }
 
-    public static function find($keyWithNamespace, array $translations, $description = null)
+    public static function find($keyWithNamespace, array $translations, array $contextDescriptions = array())
     {
         $key = self::keyPart($keyWithNamespace);
         $namespace = self::namespacePart($keyWithNamespace);
+        $translation = self::searchInArray($translations, $namespace, $key);
+        $description = self::searchInArray($contextDescriptions, $namespace, $key);
 
-        $readFrom = $translations;
-        foreach (array_filter(explode('/', $namespace)) as $ns) {
-            if (array_key_exists($ns, $readFrom)) {
-                $readFrom = $readFrom[$ns];
-            } else {
-                break;
-            }
-        }
-        $translation = array_key_exists($key, $readFrom) ? $readFrom[$key] : self::draftTranslation($keyWithNamespace);
-
-        return new self($key, $translation, $namespace, $description);
+        return new self(
+            $key,
+            $translation ?: self::draftTranslation($keyWithNamespace),
+            $namespace,
+            $description
+        );
     }
 
     public function __construct($key, $translation, $namespace = null, $description = null)
@@ -100,4 +97,25 @@ class String
     {
         return str_replace(array('/', ':'), ' ', $keyWithNamespace);
     }
+
+    /**
+     * @param array $array
+     * @param $namespace
+     * @param $key
+     * @return null
+     */
+    private static function searchInArray(array $array, $namespace, $key)
+    {
+        $readFrom = $array;
+        foreach (array_filter(explode('/', $namespace)) as $ns) {
+            if (array_key_exists($ns, $readFrom)) {
+                $readFrom = $readFrom[$ns];
+            } else {
+                break;
+            }
+        }
+        $translation = array_key_exists($key, $readFrom) ? $readFrom[$key] : null;
+        return $translation;
+    }
+
 }

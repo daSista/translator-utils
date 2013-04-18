@@ -21,8 +21,9 @@ class CouchDb implements StorageInterface
 
     /**
      * @param String $string
+     * @param string $behavior
      */
-    public function registerString($string)
+    public function registerString($string, $behavior = self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS)
     {
         $this->createDatabaseIfNeeded();
 
