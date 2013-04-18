@@ -37,6 +37,7 @@ class PortableObject implements SourceInterface
             $this->translations,
             self::interpret($buffer)
         );
+        return $this;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
