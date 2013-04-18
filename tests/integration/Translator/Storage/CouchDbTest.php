@@ -94,7 +94,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     public function testAppendsMissedContextDescriptionToDatabaseContentWhenStringIsBeingRegistered()
     {
-        $string = String::create('now', 'Accurate translation');
+        $string = String::create('now', 'Accurate translation', '');
         self::storage()->registerString($string);
         self::storage()->registerString(
             String::create('now', 'Now', 'Context description'),
