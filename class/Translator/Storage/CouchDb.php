@@ -29,7 +29,8 @@ class CouchDb implements StorageInterface
 
         /** @var $response \Doctrine\CouchDB\HTTP\Response */
         $response = $this->db->findDocument($string->id());
-        $doc = $response->status === 404 ? $string->asDocument() : array_merge($response->body, $string->asDocument());
+        $doc = $response->status === 404 ?
+            $string->asDocument() : self::mergeStrings($response->body, $string->asDocument(), $behavior);
 
         if (isset($doc['_rev'])) {
             $this->db->putDocument($doc, $doc['_id']);
@@ -86,5 +87,14 @@ class CouchDb implements StorageInterface
     private function databaseExists()
     {
         return in_array($this->db->getDatabase(), $this->db->getAllDatabases());
+    }
+
+    private static function mergeStrings($existing, $new, $behavior)
+    {
+        if ($behavior === self::BEHAVIOR_RESPECT_DATABASE_CONTENTS) {
+            return array_merge($new, $existing);
+        } else {
+            return array_merge($existing, $new);
+        }
     }
 }

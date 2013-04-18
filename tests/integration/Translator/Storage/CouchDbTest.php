@@ -76,4 +76,34 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         $this->assertEquals('email:', $doc->body['translation']);
         $this->assertEquals('Validation message', $doc->body['description']);
     }
+
+    public function testCanPreserveDatabaseContentWhenStringIsBeingRegistered()
+    {
+        $string = String::create('now', 'Accurate translation', 'Accurate description');
+        self::storage()->registerString($string);
+        self::storage()->registerString(
+            String::create('now', 'Now', 'now word'),
+            StorageInterface::BEHAVIOR_RESPECT_DATABASE_CONTENTS
+        );
+
+        $this->assertEquals(
+            $string->asDocument(),
+            array_diff_key(self::db()->findDocument($string->id())->body, array('_rev' => null))
+        );
+    }
+
+    public function testAppendsMissedContextDescriptionToDatabaseContentWhenStringIsBeingRegistered()
+    {
+        $string = String::create('now', 'Accurate translation');
+        self::storage()->registerString($string);
+        self::storage()->registerString(
+            String::create('now', 'Now', 'Context description'),
+            StorageInterface::BEHAVIOR_RESPECT_DATABASE_CONTENTS
+        );
+
+        $this->assertEquals(
+            String::create('now', 'Accurate translation', 'Context description')->asDocument(),
+            array_diff_key(self::db()->findDocument($string->id())->body, array('_rev' => null))
+        );
+    }
 }
