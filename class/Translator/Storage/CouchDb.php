@@ -92,7 +92,10 @@ class CouchDb implements StorageInterface
     private static function mergeStrings($existing, $new, $behavior)
     {
         if ($behavior === self::BEHAVIOR_RESPECT_DATABASE_CONTENTS) {
-            return array_merge($new, $existing, array('description' => $existing['description'] ?: $new['description']));
+            if (array_key_exists('description', $existing) && !strlen($existing['description'])) {
+                unset($existing['description']);
+            }
+            return array_merge($new, $existing);
         } else {
             return array_merge($existing, $new);
         }
