@@ -14,10 +14,13 @@ class String
 
     public static function create($keyWithNamespace, $translation, $description = null)
     {
+        $key = self::keyPart($keyWithNamespace);
+        $namespace = self::namespacePart($keyWithNamespace);
+
         return new self(
-            self::keyPart($keyWithNamespace),
-            $translation,
-            self::namespacePart($keyWithNamespace),
+            $key,
+            $translation ?: self::defaultTranslation($key),
+            $namespace,
             $description
         );
     }
@@ -31,7 +34,7 @@ class String
 
         return new self(
             $key,
-            $translation ?: self::draftTranslation($keyWithNamespace),
+            $translation ?: self::defaultTranslation($key),
             $namespace,
             $description
         );
@@ -93,11 +96,6 @@ class String
             substr($keyWithNamespace, 0, strrpos($keyWithNamespace, ':')) : null;
     }
 
-    private static function draftTranslation($keyWithNamespace)
-    {
-        return str_replace(array('/', ':'), ' ', $keyWithNamespace);
-    }
-
     /**
      * @param array $array
      * @param $namespace
@@ -118,4 +116,15 @@ class String
         return $translation;
     }
 
+    private static function defaultTranslation($key) {
+        $string = String::create($key, $key);
+        $return = array();
+        if (preg_match_all('/(\b|[A-Z]+)[a-z]+/', $string->key(), $matches)) {
+            foreach ($matches[0] as $part) {
+                $return[] = preg_match('/[A-Z]{2,}/', $part) ? $part : strtolower($part);
+            }
+            $return[0] = ucfirst($return[0]);
+        }
+        return count($return) ? join(' ', $return) : $key;
+    }
 }

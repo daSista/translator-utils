@@ -67,6 +67,26 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @dataProvider translationPairsDataProvider
+     */
+    public function testCreatesDefaultTranslationWhenTranslationNotDefined($expectedTranslation, $keyWithNamespace)
+    {
+        $this->assertEquals($expectedTranslation, strval(String::create($keyWithNamespace, null)));
+    }
+
+    public static function translationPairsDataProvider()
+    {
+        return array(
+            array('Not defined', 'notDefined'),
+            array('Typically swiss hotels', 'catalog:typicallySwissHotels'),
+            array('IBMOffice address', 'catalog:IBMOfficeAddress'),
+            array('Text', 'textHTML'),
+            array('HTMLtext', 'HTMLtext'),
+            array('Super UFOVehicle description', 'superUFOVehicleDescription'),
+        );
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function str($description = null)

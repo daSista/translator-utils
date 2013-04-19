@@ -43,7 +43,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     {
         $storage = m::mock();
         $storage->shouldReceive('registerString')
-            ->with(equalTo(new String('title', 'order details title', 'order/details')), anything())->once();
+            ->with(equalTo(new String('title', 'Title', 'order/details')), anything())->once();
         $storage->shouldReceive('registerString');
 
         self::crawler($storage, array())->collectTranslations(array(vfsStream::url('templates')), '.html');

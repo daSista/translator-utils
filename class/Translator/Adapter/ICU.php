@@ -4,6 +4,7 @@ namespace Translator\Adapter;
 
 use Translator\Application;
 use Translator\String\Decorator;
+use Translator\String;
 
 class ICU implements AdapterInterface
 {
@@ -35,7 +36,7 @@ class ICU implements AdapterInterface
         $translation = array_key_exists($key, $this->translations) ?
             msgfmt_format_message($this->locale, $this->translations[$key], $params)
             :
-            $key;
+            self::defaultTranslation($key);
 
         if ($this->translationMode === Application::TRANSLATE_ON) {
             return $this->decorator()->decorate($key, $translation);
@@ -51,4 +52,7 @@ class ICU implements AdapterInterface
         return $this->testDecorator ?: new Decorator();
     }
 
+    private static function defaultTranslation($key) {
+        return strval(String::create($key, null));
+    }
 }
