@@ -51,10 +51,16 @@ class ICU implements AdapterInterface
     private function format($key, $params)
     {
         $fmt = msgfmt_create($this->locale, $this->translations[$key]);
+
+        if (!$fmt) {
+            throw new \Exception('msgfmt_create() failed');
+        }
+
         $result = msgfmt_format($fmt, $params);
 
         if (false === $result) {
-            throw new Exception(
+            throw new \Exception(
+                'msgfmt_format() failed: ' .
                 msgfmt_get_error_message($fmt) . ' (' . msgfmt_get_error_code($fmt) . ')'
             );
         }
