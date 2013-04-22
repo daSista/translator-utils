@@ -4,27 +4,23 @@ namespace Translator\SourceCode\TranslateIterator;
 
 class AngularView implements TranslateIteratorInterface
 {
-    private $translations = array();
-
+    /**
+     * @param string $filePath
+     * @return array [I18N_KEY => [MESSAGE_ARGUMENTS]|null]
+     */
     public function select($filePath)
     {
         $template = file_get_contents($filePath);
-        $this->translations = array();
+        $translations = array();
 
         preg_match_all("/{{\\s*'([^']+)'\\s*\\|\\s*i18n\\s*:?\\s*([^}]*)}}/", $template, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $group) {
-            $this->translations[$group[1]] = self::enumerateParameters($group[2]) ?: null;
+            $translations[$group[1]] = self::enumerateParameters($group[2]) ?: null;
         }
-        return $this;
-    }
 
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->translations);
+        return $translations;
     }
-
-//----------------------------------------------------------------------------------------------------------------------
 
     private static function enumerateParameters($colonSeparatedString)
     {

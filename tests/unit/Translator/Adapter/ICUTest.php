@@ -73,6 +73,20 @@ class ICUTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testThrowsAnExceptionIfTheMEssageFormattingFails()
+    {
+        $icu = new ICU(array('foo' => '{{BAR}'), 'en_US');
+
+        try {
+            $icu->translate('foo');
+        }
+        catch (\Exception $ex) {
+            return;
+        }
+
+        $this->fail('Exception expected to be thrown');
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function adapter($translations = null, $locale = null, $decorator = null)

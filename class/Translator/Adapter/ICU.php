@@ -33,10 +33,11 @@ class ICU implements AdapterInterface
 
     public function translate($key, $params = array())
     {
-        $translation = array_key_exists($key, $this->translations) ?
-            msgfmt_format_message($this->locale, $this->translations[$key], $params)
-            :
-            self::defaultTranslation($key);
+        $translation = (
+            array_key_exists($key, $this->translations) ?
+            $this->format($key, $params) :
+            self::defaultTranslation($key)
+        );
 
         if ($this->translationMode === Application::TRANSLATE_ON) {
             return $this->decorator()->decorate($key, $translation);
@@ -46,6 +47,26 @@ class ICU implements AdapterInterface
     }
 
 //----------------------------------------------------------------------------------------------------------------------
+
+    private function format($key, $params)
+    {
+        $fmt = msgfmt_create($this->locale, $this->translations[$key]);
+
+        if (!$fmt) {
+            throw new \Exception('msgfmt_create() failed');
+        }
+
+        $result = msgfmt_format($fmt, $params);
+
+        if (false === $result) {
+            throw new \Exception(
+                'msgfmt_format() failed: ' .
+                msgfmt_get_error_message($fmt) . ' (' . msgfmt_get_error_code($fmt) . ')'
+            );
+        }
+
+        return $result;
+    }
 
     private function decorator()
     {
