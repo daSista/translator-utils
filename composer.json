@@ -34,7 +34,13 @@
         {
             "name": "Maxim Gnatenko",
             "email": "maxim@xiag.ch"
+        },
+
+        {
+            "name": "Ivan Krechetov",
+            "email": "ivan.krechetov@gmail.com"
         }
+
     ],
     "autoload": {
         "psr-0": {
