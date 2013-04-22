@@ -20,8 +20,9 @@
         }
     ],
     "require": {
-        "doctrine/couchdb": "dev-master",
-        "ext-intl": "*"
+        "php": ">=5.3.0",
+        "ext-intl": "*",
+        "doctrine/couchdb": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "0.7.*",
