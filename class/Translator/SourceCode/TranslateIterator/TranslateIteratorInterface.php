@@ -2,11 +2,11 @@
 
 namespace Translator\SourceCode\TranslateIterator;
 
-interface TranslateIteratorInterface extends \IteratorAggregate
+interface TranslateIteratorInterface
 {
     /**
      * @param string $filePath
-     * @return self
+     * @return array [I18N_KEY => [MESSAGE_ARGUMENTS]|null]
      */
     public function select($filePath);
 }

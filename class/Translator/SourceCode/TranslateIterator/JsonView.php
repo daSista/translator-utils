@@ -4,8 +4,10 @@ namespace Translator\SourceCode\TranslateIterator;
 
 class JsonView implements TranslateIteratorInterface
 {
-    private $translations = array();
-
+    /**
+     * @param string $filePath
+     * @return array [I18N_KEY => [MESSAGE_ARGUMENTS]|null]
+     */
     public function select($filePath)
     {
         $jsonData = json_decode(file_get_contents($filePath), true);
@@ -22,12 +24,6 @@ class JsonView implements TranslateIteratorInterface
             }
         );
 
-        $this->translations = $translations;
-        return $this;
-    }
-
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->translations);
+        return $translations;
     }
 }
