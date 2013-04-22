@@ -1,0 +1,93 @@
+[
+  {
+    "id": 43,
+    "name": {
+      "i18nKey": "catalog:typicallySwissHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:typicallySwissHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 194
+  },
+  {
+    "id": 44,
+    "name": {
+      "i18nKey": "catalog:wellnessAndSpaHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:wellnessAndSpaHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 73
+  },
+  {
+    "id": 11,
+    "name": {
+      "i18nKey": "catalog:kidsHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:kidsHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 26
+  },
+  {
+    "id": 12,
+    "name": {
+      "i18nKey": "catalog:swissDeluxeHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:swissDeluxeHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 42
+  },
+  {
+    "id": 41,
+    "name": {
+      "i18nKey": "catalog:affordableHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:affordableHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 237
+  },
+  {
+    "id": 48,
+    "name": {
+      "i18nKey": "catalog:swissHistoricHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:swissHistoricHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 45
+  },
+  {
+    "id": 57,
+    "name": {
+      "i18nKey": "catalog:designAndLifestyleHotels"
+    },
+    "url": {
+      "i18nKey": "catalog/url:designAndLifestyleHotels"
+    },
+    "photo": {
+      "url": ""
+    },
+    "hotelsCount": 63
+  }
+]
