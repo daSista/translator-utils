@@ -119,7 +119,7 @@ class String
     private static function defaultTranslation($key) {
         $string = String::create($key, $key);
         $return = array();
-        if (preg_match_all('/(\b|[A-Z]+)[a-z]+/', $string->key(), $matches)) {
+        if (preg_match_all('/(\b|[A-Z0-9]+)[a-z]+/', $string->key(), $matches)) {
             foreach ($matches[0] as $part) {
                 $return[] = preg_match('/[A-Z]{2,}/', $part) ? $part : strtolower($part);
             }

@@ -84,6 +84,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
             array('Text', 'textHTML'),
             array('HTMLtext', 'HTMLtext'),
             array('Super UFOVehicle description', 'superUFOVehicleDescription'),
+            array('2adults in 1room', '2AdultsIn1Room'),
         );
     }
 
