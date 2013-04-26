@@ -20,8 +20,9 @@
         }
     ],
     "require": {
-        "doctrine/couchdb": "dev-master",
-        "ext-intl": "*"
+        "php": ">=5.3.0",
+        "ext-intl": "*",
+        "doctrine/couchdb": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "0.7.*",
@@ -33,7 +34,13 @@
         {
             "name": "Maxim Gnatenko",
             "email": "maxim@xiag.ch"
+        },
+
+        {
+            "name": "Ivan Krechetov",
+            "email": "ivan.krechetov@gmail.com"
         }
+
     ],
     "autoload": {
         "psr-0": {

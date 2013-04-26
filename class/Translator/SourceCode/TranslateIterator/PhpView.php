@@ -4,21 +4,14 @@ namespace Translator\SourceCode\TranslateIterator;
 
 class PhpView implements TranslateIteratorInterface
 {
-    private $translations = array();
-
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->translations);
-    }
-
     /**
      * @param string $filePath
-     * @return self
+     * @return array [I18N_KEY => [MESSAGE_ARGUMENTS]|null]
      */
     public function select($filePath)
     {
         $template = file_get_contents($filePath);
-        $this->translations = array();
+        $translations = array();
 
         preg_match_all(
             "/\\$[a-zA-Z_][a-zA-Z0-9_]*\\->translate\\(\\s*('[^']+'|\"[^\"]+\")\\s*([^\\)]*)\\s*\\)/is",
@@ -27,13 +20,12 @@ class PhpView implements TranslateIteratorInterface
 
         foreach ($matches as $group) {
             $key = substr($group[1], 1, -1);
-            $this->translations[$key] = self::enumerateParameters($group[2]) ?: null;
+            $translations[$key] = self::enumerateParameters($group[2]) ?: null;
         }
-        return $this;
+
+        return $translations;
 
     }
-
-//----------------------------------------------------------------------------------------------------------------------
 
     private static function enumerateParameters($str)
     {
