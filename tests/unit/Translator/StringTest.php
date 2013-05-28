@@ -84,7 +84,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
             array('Text', 'textHTML'),
             array('HTMLtext', 'HTMLtext'),
             array('Super UFOVehicle description', 'superUFOVehicleDescription'),
-            array('2adults in 1room', '2AdultsIn1Room'),
+            array('2 adults in 1 room', '2AdultsIn1Room'),
+            array('Children age should be in range 0 to 12 years', 'childrenAgeShouldBeInRange0To12Years'),
+            array('Children age should be in range 0-12', 'childrenAgeShouldBeInRange0-12'),
         );
     }
 
