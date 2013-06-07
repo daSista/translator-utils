@@ -53,6 +53,34 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testAllNamespacedKeysReturnsNothingForAnEmptyTranslationsArray()
+    {
+        $this->assertEquals(array(), String::allNamespacedKeys(array()));
+    }
+
+    public function testAllNamespacedKeysWorksForFlatTranslationsArray()
+    {
+        $this->assertEquals(
+            array('foo', 'bar'),
+            String::allNamespacedKeys(array('foo' => '1', 'bar' => '2'))
+        );
+    }
+
+    public function testAllNamespacedKeysWorksForDeeplyNestedTranslationsArray()
+    {
+        $this->assertEquals(
+            array('foo/bar/fiz/buz:moo', 'goo', 'doo:zoo'),
+
+            String::allNamespacedKeys(
+                array(
+                    'foo' => array('bar' => array('fiz' => array('buz' => array('moo' => 'Му')))),
+                    'goo' => 'Гу',
+                    'doo' => array('zoo' => 'Зу')
+                )
+            )
+        );
+    }
+
     public function testSupportsDescription()
     {
         $this->assertEquals(
