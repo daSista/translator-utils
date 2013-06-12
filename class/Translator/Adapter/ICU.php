@@ -50,6 +50,8 @@ class ICU implements AdapterInterface
 
     private function format($key, $params)
     {
+        if ($this->translations[$key] == '') return '';
+
         $fmt = msgfmt_create($this->locale, $this->translations[$key]);
 
         if (!$fmt) {
