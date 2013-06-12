@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html> <!--<![endif]-->
+<head>
+{{> head }}
+</head>
+<body data-ng-cloak class="ng-cloak">
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+    <div class="container">
+        <header>
+            <div id="header" class="clearfix">
+                <div id="logo">
+                    <a href="">
+                        <img src="/img/ST_logo_header_{{language}}.png" alt="">
+                    </a>
+                </div>
+                <div class="header-title">
+                    <a href="/">{{#i18n}}swissHotels{{/i18n}}</a>
+                    <span>{{#i18n}}bySwitzerlandTravelCentre{{/i18n}}</span>
+                </div>
+            </div>
+            <div class="metainfo row">
+                <div class="span6" data-ng-controller='GlobalStateCtrl'>
+                    <span
+                        data-dropdownnav
+                        data-items="allLocales"
+                        data-selected="currentLocale"
+                        data-callback="changeLocale"></span>
+                </div>
+                <div class="span6 text-right">
+                    {{#i18n}}ourStaffWillBeHappyToHelp{{/i18n}}
+                    <span class="tel">{{#i18n}}stcPhoneNumber{{/i18n}}</span>
+                </div>
+            </div>
+        </header>
+        {{> index/content }}
+    </div>
+    <footer>
+        <div class="container">
+        <div class="footer-links clearfix">
+            <ul>
+                <li><a href="">{{#i18n}}aboutUs{{/i18n}}</a></li>
+                <li><a href="">{{#i18n}}frequentlyAskedQuestions{{/i18n}}</a></li>
+                <li><a href="">{{#i18n}}privacyPolicy{{/i18n}}</a></li>
+                <li><a href="">{{#i18n}}security{{/i18n}}</a></li>
+                <li><a href="">{{#i18n}}termsAndConditions{{/i18n}}</a></li>
+            </ul>
+        </div>
+            <div class="row">
+                <div class="span6">
+                    <div class="copy">{{#i18n}}copyright{{/i18n}}</div>
+                </div>
+                <div class="span6 partners">
+                    <a href=""><img src="/img/HS_Logo.png" alt=""></a>
+                    <a href=""><img src="/img/ST_Logo_MySwitzerland.com_{{language}}.png" alt=""></a>
+                    <a href=""><img src="/img/SBB_Logo.png" alt=""></a>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+    {{#translate}}
+    <script>
+        document.write('<iframe id="translate" src="/translator/" width="1" height="1" frameborder="0" onload="bootstrap()"></iframe>');
+    </script>
+    {{/translate}}
+</body>
+</html>
