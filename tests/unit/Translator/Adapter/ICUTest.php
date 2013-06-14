@@ -87,6 +87,12 @@ class ICUTest extends \PHPUnit_Framework_TestCase
         $this->fail('Exception expected to be thrown');
     }
 
+    public function testWorksOnAnEmptyTranslation()
+    {
+        $icu = new ICU(array('moo' => ''), 'en_US');
+        $this->assertSame('', $icu->translate('moo'));
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function adapter($translations = null, $locale = null, $decorator = null)
