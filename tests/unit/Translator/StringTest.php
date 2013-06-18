@@ -53,6 +53,38 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfNSLonger()
+    {
+        $this->assertEquals(
+            String::create('validation/error/fatal:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+            String::find(
+                'validation/error/fatal:notQuiteSimpleKeyToSearch',
+                array(
+                    'validation' => array(
+                        'error' => array(
+                            'notQuiteSimpleKeyToSearch' => 'Should be not empty'
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfKeyExistsSimilarToNS()
+    {
+        $this->assertEquals(
+            String::create('validation/error:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+            String::find(
+                'validation/error:notQuiteSimpleKeyToSearch',
+                array(
+                    'validation' => array(
+                        'error' => 'This is an error'
+                    )
+                )
+            )
+        );
+    }
+
     public function testAllNamespacedKeysReturnsNothingForAnEmptyTranslationsArray()
     {
         $this->assertEquals(array(), String::allNamespacedKeys(array()));
