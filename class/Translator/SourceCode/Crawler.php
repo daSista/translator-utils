@@ -44,12 +44,12 @@ class Crawler
     public function collectTranslations(array $pathsToSearchIn, $fileExt)
     {
         foreach ($pathsToSearchIn as $path) {
-            foreach ($this->readDir($path) as $relativePath) {
-                if (preg_match('/' . preg_quote($fileExt) . '$/', $relativePath)) {
+            foreach ($this->readDir($path) as $filename) {
+                if (preg_match('/' . preg_quote($fileExt) . '$/', $filename)) {
                     $this->registerAllTranslations(
                         $this->translations,
                         $this->contextDescription,
-                        $path . '/' . $relativePath
+                        $filename
                     );
                 }
             }
@@ -73,22 +73,12 @@ class Crawler
         }
     }
 
-    private function readDir($path, $exclude = ".|..", $relativePart = '.') {
-        $path = rtrim($path, "/") . "/";
-        $folder_handle = opendir($path);
-        $exclude_array = explode("|", $exclude);
+    private function readDir($path) {
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $result = array();
-        while(false !== ($filename = readdir($folder_handle))) {
-            if(!in_array(strtolower($filename), $exclude_array)) {
-                if(is_dir($path . $filename . "/")) {
-                    // Need to include full "path" or it's an infinite loop
-                    $result = array_merge(
-                        $result,
-                        $this->readDir($path . $filename . "/", $exclude, $relativePart . '/' . $filename)
-                    );
-                } else {
-                    $result[] = $relativePart . '/' . $filename;
-                }
+        foreach ($iterator as $filename) {
+            if (is_file($filename)) {
+                $result[] = $filename;
             }
         }
         return $result;
