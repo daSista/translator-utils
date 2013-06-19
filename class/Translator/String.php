@@ -137,10 +137,10 @@ class String
     {
         $readFrom = $array;
         foreach (array_filter(explode('/', $namespace)) as $ns) {
-            if (array_key_exists($ns, $readFrom)) {
+            if (array_key_exists($ns, $readFrom) && is_array($readFrom[$ns])) {
                 $readFrom = $readFrom[$ns];
             } else {
-                break;
+                return null;
             }
         }
         $translation = array_key_exists($key, $readFrom) ? $readFrom[$key] : null;
