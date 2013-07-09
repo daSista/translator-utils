@@ -19,7 +19,7 @@ class MustacheViewTest extends \PHPUnit_Framework_TestCase
                 'bySwitzerlandTravelCentre' => null,
                 'ourStaffWillBeHappyToHelp' => null,
                 'stcPhoneNumber' => null,
-                'aboutUs' => null,
+                'aboutUs' => array('company', 'phone'),
                 'frequentlyAskedQuestions' => null,
                 'privacyPolicy' => null,
                 'security' => null,
