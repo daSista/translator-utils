@@ -22,7 +22,7 @@ class MustacheView implements TranslateIteratorInterface
         $tagQuoted = preg_quote($this->translationTagName, '@');
 
         preg_match_all(
-            '@{{#' . $tagQuoted . '}}([^{]+){{/' . $tagQuoted . '}}@is',
+            '@{{#' . $tagQuoted . '}}(.+?){{/' . $tagQuoted . '}}@is',
             $template, $matches, PREG_SET_ORDER
         );
 

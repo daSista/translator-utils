@@ -54,7 +54,8 @@
         </div>
             <div class="row">
                 <div class="span6">
-                    <div class="copy">{{#i18n}}copyright{{/i18n}}</div>
+                    <!-- Support of nested mustache tags and/or braces in attributes -->
+                    <div class="copy">{{#i18n}}copyright year="{{year}}" {{/i18n}}</div>
                 </div>
                 <div class="span6 partners">
                     <a href=""><img src="/img/HS_Logo.png" alt=""></a>
