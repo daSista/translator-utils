@@ -44,7 +44,8 @@
         <div class="container">
         <div class="footer-links clearfix">
             <ul>
-                <li><a href="">{{#i18n}}aboutUs{{/i18n}}</a></li>
+                <!-- Support for XML-like attributes with single or double quotes around attributes values and several spaces around -->
+                <li><a href="">{{#i18n}}aboutUs   company="name"   phone='555-1234'   {{/i18n}}</a></li>
                 <li><a href="">{{#i18n}}frequentlyAskedQuestions{{/i18n}}</a></li>
                 <li><a href="">{{#i18n}}privacyPolicy{{/i18n}}</a></li>
                 <li><a href="">{{#i18n}}security{{/i18n}}</a></li>
@@ -53,7 +54,8 @@
         </div>
             <div class="row">
                 <div class="span6">
-                    <div class="copy">{{#i18n}}copyright{{/i18n}}</div>
+                    <!-- Support of nested mustache tags and/or braces in attributes -->
+                    <div class="copy">{{#i18n}}copyright year="{{year}}" {{/i18n}}</div>
                 </div>
                 <div class="span6 partners">
                     <a href=""><img src="/img/HS_Logo.png" alt=""></a>
