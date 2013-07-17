@@ -53,6 +53,66 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfNSLonger()
+    {
+        $this->assertEquals(
+            String::create('validation/error/fatal:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+            String::find(
+                'validation/error/fatal:notQuiteSimpleKeyToSearch',
+                array(
+                    'validation' => array(
+                        'error' => array(
+                            'notQuiteSimpleKeyToSearch' => 'Should be not empty'
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfKeyExistsSimilarToNS()
+    {
+        $this->assertEquals(
+            String::create('validation/error:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+            String::find(
+                'validation/error:notQuiteSimpleKeyToSearch',
+                array(
+                    'validation' => array(
+                        'error' => 'This is an error'
+                    )
+                )
+            )
+        );
+    }
+
+    public function testAllNamespacedKeysReturnsNothingForAnEmptyTranslationsArray()
+    {
+        $this->assertEquals(array(), String::allNamespacedKeys(array()));
+    }
+
+    public function testAllNamespacedKeysWorksForFlatTranslationsArray()
+    {
+        $this->assertEquals(
+            array('foo', 'bar'),
+            String::allNamespacedKeys(array('foo' => '1', 'bar' => '2'))
+        );
+    }
+
+    public function testAllNamespacedKeysWorksForDeeplyNestedTranslationsArray()
+    {
+        $this->assertEquals(
+            array('foo/bar/fiz/buz:moo', 'goo', 'doo:zoo'),
+
+            String::allNamespacedKeys(
+                array(
+                    'foo' => array('bar' => array('fiz' => array('buz' => array('moo' => 'Му')))),
+                    'goo' => 'Гу',
+                    'doo' => array('zoo' => 'Зу')
+                )
+            )
+        );
+    }
+
     public function testSupportsDescription()
     {
         $this->assertEquals(

@@ -40,6 +40,11 @@ class String
         );
     }
 
+    public static function allNamespacedKeys(array $translations)
+    {
+        return self::allNamespacedKeysInContext($translations, array());
+    }
+
     public function __construct($key, $translation, $namespace = null, $description = null)
     {
         $this->key = $key;
@@ -84,6 +89,32 @@ class String
 
 //----------------------------------------------------------------------------------------------------------------------
 
+    private static function allNamespacedKeysInContext($translations, array $currentNamespaceComponents)
+    {
+        $result = array();
+
+        foreach ($translations as $name => $value) {
+            if (is_array($value)) {
+                $result = array_merge(
+                    $result,
+
+                    self::allNamespacedKeysInContext(
+                        $value,
+                        array_merge($currentNamespaceComponents, array($name))
+                    )
+                );
+            }
+            else {
+                $result[] = implode(
+                    ':',
+                    array_filter(array(implode('/', $currentNamespaceComponents), $name))
+                );
+            }
+        }
+
+        return $result;
+    }
+
     private static function keyPart($keyWithNamespace)
     {
         return strrpos($keyWithNamespace, ':') !== false ?
@@ -106,10 +137,10 @@ class String
     {
         $readFrom = $array;
         foreach (array_filter(explode('/', $namespace)) as $ns) {
-            if (array_key_exists($ns, $readFrom)) {
+            if (array_key_exists($ns, $readFrom) && is_array($readFrom[$ns])) {
                 $readFrom = $readFrom[$ns];
             } else {
-                break;
+                return null;
             }
         }
         $translation = array_key_exists($key, $readFrom) ? $readFrom[$key] : null;
