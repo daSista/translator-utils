@@ -29,20 +29,36 @@ class MustacheView implements TranslateIteratorInterface
         foreach ($matches as $group) {
             if (preg_match('/^([^\\s]+)\\s+(.+)$/im', $group[1], $attrMatches)) {
                 $key = $attrMatches[1];
-                $params = array();
-                if (preg_match_all('/([^\\s=]+)=(?:"([^"]*)"|\'([^\']*)\')/i', $attrMatches[2], $attrValuesMatches, PREG_SET_ORDER))
-                {
-                    foreach ($attrValuesMatches as $attrValuesMatch) {
-                        $params[] = $attrValuesMatch[1];
-                    }
-                }
-                $translations[$key] = ($params ? $params : null);
+                $parameters = self::collectParameters($attrMatches[2]);
             } else {
                 $key = $group[1];
-                $translations[$key] = null;
+                $parameters = null;
             }
+
+            if (!preg_match('/{{.*}}/', $key)) {
+                $translations[$key] = $parameters;
+            }
+
         }
 
         return $translations;
     }
+
+    /**
+     * @param string $theTail
+     * @return array
+     */
+    private static function collectParameters($theTail)
+    {
+        $attrValuesMatches = array();
+        if (preg_match_all('/([^\\s=]+)=(?:"([^"]*)"|\'([^\']*)\')/i', $theTail, $attrValuesMatches, PREG_SET_ORDER)) {
+            $params = array();
+            foreach ($attrValuesMatches as $attrValuesMatch) {
+                $params[] = $attrValuesMatch[1];
+            }
+            return $params;
+        }
+        return null;
+    }
+
 }

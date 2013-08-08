@@ -4,7 +4,7 @@ namespace Translator\SourceCode\TranslateIterator;
 
 class MustacheViewTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCanIterateOverEachTranslationKeys()
+    public function testCanIterateOverEachTranslationKeyIgnoringTranslationKeysToBeCompiled()
     {
         $translations = array();
         $iterator = new MustacheView('i18n');
