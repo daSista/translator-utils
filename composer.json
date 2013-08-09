@@ -1,5 +1,5 @@
 {
-    "name": "Magomogo/translator-utils",
+    "name": "magomogo/translator-utils",
     "description": "PHP Utils for localization with Magomogo/Translator application",
     "repositories": [
         {
