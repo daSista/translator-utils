@@ -29,8 +29,12 @@ class CouchDb implements StorageInterface
 
         /** @var $response \Doctrine\CouchDB\HTTP\Response */
         $response = $this->db->findDocument($string->id());
-        $doc = $response->status === 404 ?
-            $string->asDocument() : self::mergeStrings($response->body, $string->asDocument(), $behavior);
+
+        $doc = (
+            $response->status === 404 ?
+            $string->asDocument() :
+            self::mergeStrings($response->body, $string->asDocument(), $behavior
+        );
 
         if (isset($doc['_rev'])) {
             $this->db->putDocument($doc, $doc['_id']);
@@ -48,7 +52,7 @@ class CouchDb implements StorageInterface
         return array();
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
     private function queryView($namespace)
     {
@@ -72,7 +76,11 @@ class CouchDb implements StorageInterface
     private static function singleTranslation($doc)
     {
         return array(
-            ($doc['namespace'] ? join('/', $doc['namespace']) . ':' : '') . $doc['key'] => $doc['translation']
+            (
+                $doc['namespace'] ?
+                join('/', $doc['namespace']) . ':'
+                : ''
+            ) . $doc['key'] => $doc['translation']
         );
     }
 
