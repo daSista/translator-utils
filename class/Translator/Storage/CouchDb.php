@@ -33,7 +33,7 @@ class CouchDb implements StorageInterface
         $doc = (
             $response->status === 404 ?
             $string->asDocument() :
-            self::mergeStrings($response->body, $string->asDocument(), $behavior
+            self::mergeStrings($response->body, $string->asDocument(), $behavior)
         );
 
         if (isset($doc['_rev'])) {
