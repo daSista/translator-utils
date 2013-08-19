@@ -68,8 +68,8 @@ class CouchDbIntegrationTest extends CouchDbTestCase
     {
         $stringWithDescription = String::create('validation:email', 'Email', 'Validation message');
         $stringWithoutDescription = String::create('validation:email', 'email:');
-        self::storage()->registerString($stringWithDescription);
-        self::storage()->registerString($stringWithoutDescription);
+        self::storage()->setTranslationValue($stringWithDescription);
+        self::storage()->setTranslationValue($stringWithoutDescription);
 
         $doc = self::db()->findDocument($stringWithDescription->id());
 
@@ -80,11 +80,8 @@ class CouchDbIntegrationTest extends CouchDbTestCase
     public function testCanPreserveDatabaseContentWhenStringIsBeingRegistered()
     {
         $string = String::create('now', 'Accurate translation', 'Accurate description');
-        self::storage()->registerString($string);
-        self::storage()->registerString(
-            String::create('now', 'Now', 'now word'),
-            StorageInterface::BEHAVIOR_RESPECT_DATABASE_CONTENTS
-        );
+        self::storage()->setTranslationValue($string);
+        self::storage()->ensurePresence(String::create('now', 'Now', 'now word'));
 
         $this->assertEquals(
             $string->asDocument(),
@@ -95,11 +92,8 @@ class CouchDbIntegrationTest extends CouchDbTestCase
     public function testAppendsMissedContextDescriptionToDatabaseContentWhenStringIsBeingRegistered()
     {
         $string = String::create('now', 'Accurate translation', '');
-        self::storage()->registerString($string);
-        self::storage()->registerString(
-            String::create('now', 'Now', 'Context description'),
-            StorageInterface::BEHAVIOR_RESPECT_DATABASE_CONTENTS
-        );
+        self::storage()->setTranslationValue($string);
+        self::storage()->ensurePresence(String::create('now', 'Now', 'Context description'));
 
         $this->assertEquals(
             String::create('now', 'Accurate translation', 'Context description')->asDocument(),

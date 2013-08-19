@@ -1,4 +1,5 @@
 <?php
+
 namespace Translator\Test;
 
 use Doctrine\CouchDB\CouchDBClient;
@@ -18,7 +19,7 @@ abstract class CouchDbTestCase extends \PHPUnit_Framework_TestCase
         self::db()->deleteDatabase(TEST_COUCHDB_NAME);
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
     protected static function db()
     {
@@ -27,12 +28,12 @@ abstract class CouchDbTestCase extends \PHPUnit_Framework_TestCase
 
     protected static function fillInStorage()
     {
-        self::storage()->registerString(String::create('validation:email', 'Email'));
-        self::storage()->registerString(String::create('validation/error:notEmpty', 'Should be not empty'));
-        self::storage()->registerString(String::create('validation/error:emailFormat', 'Email format is incorrect'));
-        self::storage()->registerString(String::create('pager:pageXFromY', 'Page %d from $d'));
-        self::storage()->registerString(String::create('pager:totalAmountOfPages', 'Total %d page(s)'));
-        self::storage()->registerString(String::create('yes', 'Yes'));
+        self::storage()->setTranslationValue(String::create('validation:email', 'Email'));
+        self::storage()->setTranslationValue(String::create('validation/error:notEmpty', 'Should be not empty'));
+        self::storage()->setTranslationValue(String::create('validation/error:emailFormat', 'Email format is incorrect'));
+        self::storage()->setTranslationValue(String::create('pager:pageXFromY', 'Page %d from $d'));
+        self::storage()->setTranslationValue(String::create('pager:totalAmountOfPages', 'Total %d page(s)'));
+        self::storage()->setTranslationValue(String::create('yes', 'Yes'));
     }
 
     protected static function storage()

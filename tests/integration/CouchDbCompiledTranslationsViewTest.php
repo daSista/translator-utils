@@ -10,7 +10,7 @@ class CouchDbCompiledTranslationsViewTest extends CouchDbTestCase
 {
     public function testReturnsCompiledJavascript()
     {
-        self::storage()->registerString(String::create('validation:email', 'Email'));
+        self::storage()->setTranslationValue(String::create('validation:email', 'Email'));
         $http = new HttpClient();
 
         $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/js/translations', null, true);
@@ -35,7 +35,7 @@ JS
     {
         $ruStorage = new CouchDb(self::db(), 'ru_RU');
 
-        $ruStorage->registerString(String::create('num', '{NUM, plural, one: {одна овца} few {# овцы} other {# овец}}'));
+        $ruStorage->setTranslationValue(String::create('num', '{NUM, plural, one: {одна овца} few {# овцы} other {# овец}}'));
         $http = new HttpClient();
 
         $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/js/translations', null, true);
@@ -47,8 +47,8 @@ JS
     public function testCompilesPOTextFile()
     {
         self::fillInStorage();
-        self::storage()->registerString(String::create('toBeEnquoted', 'The "String" \\Here'));
-        self::storage()->registerString(String::create('multiline', <<<TEXT
+        self::storage()->setTranslationValue(String::create('toBeEnquoted', 'The "String" \\Here'));
+        self::storage()->setTranslationValue(String::create('multiline', <<<TEXT
 first line
 second line
 
@@ -103,7 +103,7 @@ PO
 
     public function testIncludesDescriptionIntoPOComments()
     {
-        self::storage()->registerString(
+        self::storage()->setTranslationValue(
             String::create('Unknown system error', 'Error desconegut del sistema', <<<'DESC'
 this string needed
 for special case

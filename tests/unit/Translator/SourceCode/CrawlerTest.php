@@ -29,12 +29,12 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testCrawlsThroughTheFilesystemRegisteringTranslations()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')
-            ->with(equalTo(new String('title', 'The title')), anything())->once();
-        $storage->shouldReceive('registerString')
-            ->with(equalTo(new String('title', 'Here are the order details', 'order/details')), anything())->once();
-        $storage->shouldReceive('registerString')
-            ->with(equalTo(new String('agb', 'Terms and conditions')), anything())->once();
+        $storage->shouldReceive('ensurePresence')
+            ->with(equalTo(new String('title', 'The title')))->once();
+        $storage->shouldReceive('ensurePresence')
+            ->with(equalTo(new String('title', 'Here are the order details', 'order/details')))->once();
+        $storage->shouldReceive('ensurePresence')
+            ->with(equalTo(new String('agb', 'Terms and conditions')))->once();
 
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), '.html');
     }
@@ -42,9 +42,9 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testWorksWellWhenTranslationIsntDefined()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')
-            ->with(equalTo(new String('title', 'Title', 'order/details')), anything())->once();
-        $storage->shouldReceive('registerString');
+        $storage->shouldReceive('ensurePresence')
+            ->with(equalTo(new String('title', 'Title', 'order/details')))->once();
+        $storage->shouldReceive('ensurePresence');
 
         self::crawler($storage, array())->collectTranslations(array(vfsStream::url('templates')), '.html');
     }
@@ -52,27 +52,29 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testWorksWellWhenTranslationKeysAreNotFoundInTheTemplate()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')->never();
+        $storage->shouldReceive('ensurePresence')->never();
         self::crawler($storage, array())->collectTranslations(array(vfsStream::url('templates/empty')), '.html');
     }
 
     public function testFiltersFilesByExtension()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')->never();
+        $storage->shouldReceive('ensurePresence')->never();
         self::crawler($storage, array())->collectTranslations(array(vfsStream::url('templates')), '.tmpl');
     }
 
     public function testTakesMissedContextDescriptionFromGivenArray()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')
+
+        $storage
+            ->shouldReceive('ensurePresence')
             ->with(
-                equalTo(new String('title', 'Here are the order details', 'order/details', 'H1 title in GUI')),
-                anything()
+                equalTo(new String('title', 'Here are the order details', 'order/details', 'H1 title in GUI'))
             )
             ->once();
-        $storage->shouldReceive('registerString');
+
+        $storage->shouldReceive('ensurePresence');
 
         self::crawler($storage, null, self::contextDescriptions())
             ->collectTranslations(array(vfsStream::url('templates')), '.html');
@@ -82,13 +84,12 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testCrawlerRespectsDatabaseContents()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')
-            ->with(anything(), StorageInterface::BEHAVIOR_RESPECT_DATABASE_CONTENTS)->atLeast(4);
+        $storage->shouldReceive('ensurePresence')->with(anything())->atLeast(4);
 
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), '.html');
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
     private static function crawler($storage, $translations = null, $context = null)
     {

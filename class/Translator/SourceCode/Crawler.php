@@ -56,7 +56,7 @@ class Crawler
         }
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
     /**
      * @param array $translations
@@ -66,9 +66,8 @@ class Crawler
     private function registerAllTranslations(array $translations, array $contextDescriptions, $path)
     {
         foreach ($this->translateFinder->select($path) as $keyWithNamespace => $parameters) {
-            $this->storage->registerString(
-                String::find($keyWithNamespace, $translations, $contextDescriptions),
-                StorageInterface::BEHAVIOR_RESPECT_DATABASE_CONTENTS
+            $this->storage->ensurePresence(
+                String::find($keyWithNamespace, $translations, $contextDescriptions)
             );
         }
     }

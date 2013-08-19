@@ -10,10 +10,10 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
     public function testIteratesOverAllStringsRegisteringThem()
     {
         $storage = m::mock();
-        $storage->shouldReceive('registerString')
+        $storage->shouldReceive('setTranslationValue')
             ->with(equalTo(new String('yes', 'Yes')))
             ->once();
-        $storage->shouldReceive('registerString')
+        $storage->shouldReceive('setTranslationValue')
             ->with(equalTo(new String('notEmpty', 'Should be not empty', 'validator', 'Validation error messages')))
             ->once();
 

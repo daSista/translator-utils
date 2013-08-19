@@ -21,9 +21,37 @@ class CouchDb implements StorageInterface
 
     /**
      * @param String $string
-     * @param string $behavior
+     * @return void
      */
-    public function registerString($string, $behavior = self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS)
+    public function ensurePresence($string)
+    {
+        $this->registerString($string, self::BEHAVIOR_RESPECT_DATABASE_CONTENTS);
+    }
+
+    /**
+     * @param String $string
+     * @return void
+     */
+    public function setTranslationValue($string)
+    {
+        $this->registerString($string, self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS);
+    }
+
+    public function mappedTranslations($namespace = null)
+    {
+        if ($this->databaseExists()) {
+            return $this->queryView($namespace ?: '');
+        }
+
+        return array();
+    }
+
+//--------------------------------------------------------------------------------------------------
+
+    const BEHAVIOR_RESPECT_DATABASE_CONTENTS = 'BEHAVIOR_RESPECT_DATABASE_CONTENTS';
+    const BEHAVIOR_OVERWRITE_DATABASE_CONTENTS = 'BEHAVIOR_OVERWRITE_DATABASE_CONTENTS';
+
+    private function registerString($string, $behavior)
     {
         $this->createDatabaseIfNeeded();
 
@@ -42,17 +70,6 @@ class CouchDb implements StorageInterface
             $this->db->postDocument($doc);
         }
     }
-
-    public function mappedTranslations($namespace = null)
-    {
-        if ($this->databaseExists()) {
-            return $this->queryView($namespace ?: '');
-        }
-
-        return array();
-    }
-
-//--------------------------------------------------------------------------------------------------
 
     private function queryView($namespace)
     {
