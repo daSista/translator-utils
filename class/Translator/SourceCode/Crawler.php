@@ -67,7 +67,7 @@ class Crawler
     {
         foreach ($this->translateFinder->select($path) as $keyWithNamespace => $parameters) {
             $this->storage->ensurePresence(
-                String::find($keyWithNamespace, $translations, $contextDescriptions)
+                String::find($keyWithNamespace, $path, $translations, $contextDescriptions)
             );
         }
     }

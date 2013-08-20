@@ -29,7 +29,12 @@ class String
         );
     }
 
-    public static function find($keyWithNamespace, array $translations, array $contextDescriptions)
+    public static function find(
+        $keyWithNamespace,
+        $source,
+        array $translations,
+        array $contextDescriptions
+    )
     {
         $key = self::keyPart($keyWithNamespace);
         $namespace = self::namespacePart($keyWithNamespace);
@@ -41,7 +46,7 @@ class String
             $translation ?: self::defaultTranslation($key),
             $namespace,
             $description,
-            null
+            $source
         );
     }
 
@@ -72,6 +77,11 @@ class String
     public function ns()
     {
         return $this->namespace;
+    }
+
+    public function source()
+    {
+        return $this->source;
     }
 
     public function asDocument()

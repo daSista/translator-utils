@@ -29,12 +29,38 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testCrawlsThroughTheFilesystemRegisteringTranslations()
     {
         $storage = m::mock();
-        $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(String::create('title', 'The title')))->once();
-        $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(String::create('order/details:title', 'Here are the order details')))->once();
-        $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(String::create('agb', 'Terms and conditions')))->once();
+
+        $storage
+            ->shouldReceive('ensurePresence')
+            ->with(
+                equalTo(String::create('title', 'The title', null, 'vfs://templates/order.html'))
+            )->once();
+
+        $storage
+            ->shouldReceive('ensurePresence')
+            ->with(
+                equalTo(
+                    String::create(
+                        'order/details:title',
+                        'Here are the order details',
+                        null,
+                        'vfs://templates/order/details.html'
+                    )
+                )
+            )->once();
+
+        $storage
+            ->shouldReceive('ensurePresence')
+            ->with(
+                equalTo(
+                    String::create(
+                        'agb',
+                        'Terms and conditions',
+                        null,
+                        'vfs://templates/view/controller/index.html'
+                    )
+                )
+            )->once();
 
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), '.html');
     }
@@ -42,11 +68,29 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testWorksWellWhenTranslationIsntDefined()
     {
         $storage = m::mock();
-        $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(String::create('order/details:title', 'Title')))->once();
+
+        $storage
+            ->shouldReceive('ensurePresence')
+            ->with(
+                equalTo(
+                    String::create(
+                        'order/details:title',
+                        'Title',
+                        null,
+                        'vfs://templates/order/details.html'
+                    )
+                )
+            )->once();
+
         $storage->shouldReceive('ensurePresence');
 
-        self::crawler($storage, array())->collectTranslations(array(vfsStream::url('templates')), '.html');
+        self::crawler(
+            $storage,
+            array()
+        )->collectTranslations(
+            array(vfsStream::url('templates')),
+            '.html'
+        );
     }
 
     public function testWorksWellWhenTranslationKeysAreNotFoundInTheTemplate()
@@ -70,7 +114,14 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $storage
             ->shouldReceive('ensurePresence')
             ->with(
-                equalTo(String::create('order/details:title', 'Here are the order details', 'H1 title in GUI'))
+                equalTo(
+                    String::create(
+                        'order/details:title',
+                        'Here are the order details',
+                        'H1 title in GUI',
+                        'vfs://templates/order/details.html'
+                    )
+                )
             )
             ->once();
 
@@ -96,6 +147,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         if (is_null($translations)) {
             $translations = self::translations();
         }
+
         if (is_null($context)) {
             $context = array();
         }

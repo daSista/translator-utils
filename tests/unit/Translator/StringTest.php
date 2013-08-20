@@ -43,6 +43,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
             String::find(
                 'validation/error:notEmpty',
+                null,
 
                 array(
                     'validation' => array(
@@ -57,6 +58,14 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testFindAssignsTheSource()
+    {
+        $this->assertSame(
+            '/etc/etc',
+            String::find('foo', '/etc/etc', array('foo' => 'BAR'), array())->source()
+        );
+    }
+
     public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfNSLonger()
     {
         $this->assertEquals(
@@ -64,6 +73,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
             String::find(
                 'validation/error/fatal:notQuiteSimpleKeyToSearch',
+                null,
 
                 array(
                     'validation' => array(
@@ -85,6 +95,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
             String::find(
                 'validation/error:notQuiteSimpleKeyToSearch',
+                null,
 
                 array(
                     'validation' => array(
