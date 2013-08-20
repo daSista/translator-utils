@@ -125,7 +125,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSupportsDescription()
+    public function testSupportsDescriptionAndSource()
     {
         $this->assertEquals(
             array(
@@ -134,8 +134,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
                 'translation' => 'Should be not empty',
                 'description' => 'This string needed to show validation error',
                 'namespace' => array('validation', 'error'),
+                'source' => '/dev/null'
             ),
-            self::str('This string needed to show validation error')->asDocument()
+            self::str('This string needed to show validation error', '/dev/null')->asDocument()
         );
     }
 
@@ -164,8 +165,13 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
 //--------------------------------------------------------------------------------------------------
 
-    private static function str($description = null)
+    private static function str($description = null, $source = null)
     {
-        return String::create('validation/error:notEmpty', 'Should be not empty', $description);
+        return String::create(
+            'validation/error:notEmpty',
+            'Should be not empty',
+            $description,
+            $source
+        );
     }
 }

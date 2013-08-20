@@ -5,14 +5,17 @@ namespace Translator;
 class String
 {
     private $key;
-
     private $translation;
-
     private $namespace;
-
     private $description;
+    private $source;
 
-    public static function create($keyWithNamespace, $translation, $description = null)
+    public static function create(
+        $keyWithNamespace,
+        $translation,
+        $description = null,
+        $source = null
+    )
     {
         $key = self::keyPart($keyWithNamespace);
         $namespace = self::namespacePart($keyWithNamespace);
@@ -21,7 +24,8 @@ class String
             $key,
             $translation ?: self::defaultTranslation($key),
             $namespace,
-            $description
+            $description,
+            $source
         );
     }
 
@@ -36,7 +40,8 @@ class String
             $key,
             $translation ?: self::defaultTranslation($key),
             $namespace,
-            $description
+            $description,
+            null
         );
     }
 
@@ -45,12 +50,13 @@ class String
         return self::allNamespacedKeysInContext($translations, array());
     }
 
-    private function __construct($key, $translation, $namespace, $description)
+    private function __construct($key, $translation, $namespace, $description, $source)
     {
         $this->key = $key;
         $this->translation = $translation;
         $this->namespace = $namespace;
         $this->description = $description;
+        $this->source = $source;
     }
 
     public function id()
@@ -76,9 +82,13 @@ class String
             'translation' => $this->translation,
             'namespace' => array_filter(explode('/', $this->namespace)) ?: null,
         );
-        if (!is_null($this->description)) {
-            $doc['description'] = $this->description;
+
+        foreach (array('description', 'source') as $prop) {
+            if (!is_null($this->$prop)) {
+                $doc[$prop] = $this->$prop;
+            }
         }
+
         return $doc;
     }
 
