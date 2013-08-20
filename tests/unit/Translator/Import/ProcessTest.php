@@ -11,10 +11,10 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
     {
         $storage = m::mock();
         $storage->shouldReceive('setTranslationValue')
-            ->with(equalTo(new String('yes', 'Yes')))
+            ->with(equalTo(String::create('yes', 'Yes')))
             ->once();
         $storage->shouldReceive('setTranslationValue')
-            ->with(equalTo(new String('notEmpty', 'Should be not empty', 'validator', 'Validation error messages')))
+            ->with(equalTo(String::create('validator:notEmpty', 'Should be not empty', 'Validation error messages')))
             ->once();
 
         $process = new Process($storage);

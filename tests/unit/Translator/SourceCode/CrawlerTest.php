@@ -30,11 +30,11 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     {
         $storage = m::mock();
         $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(new String('title', 'The title')))->once();
+            ->with(equalTo(String::create('title', 'The title')))->once();
         $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(new String('title', 'Here are the order details', 'order/details')))->once();
+            ->with(equalTo(String::create('order/details:title', 'Here are the order details')))->once();
         $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(new String('agb', 'Terms and conditions')))->once();
+            ->with(equalTo(String::create('agb', 'Terms and conditions')))->once();
 
         self::crawler($storage)->collectTranslations(array(vfsStream::url('templates')), '.html');
     }
@@ -43,7 +43,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     {
         $storage = m::mock();
         $storage->shouldReceive('ensurePresence')
-            ->with(equalTo(new String('title', 'Title', 'order/details')))->once();
+            ->with(equalTo(String::create('order/details:title', 'Title')))->once();
         $storage->shouldReceive('ensurePresence');
 
         self::crawler($storage, array())->collectTranslations(array(vfsStream::url('templates')), '.html');
@@ -70,7 +70,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $storage
             ->shouldReceive('ensurePresence')
             ->with(
-                equalTo(new String('title', 'Here are the order details', 'order/details', 'H1 title in GUI'))
+                equalTo(String::create('order/details:title', 'Here are the order details', 'H1 title in GUI'))
             )
             ->once();
 

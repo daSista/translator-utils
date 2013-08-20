@@ -45,7 +45,7 @@ class String
         return self::allNamespacedKeysInContext($translations, array());
     }
 
-    public function __construct($key, $translation, $namespace = null, $description = null)
+    private function __construct($key, $translation, $namespace, $description)
     {
         $this->key = $key;
         $this->translation = $translation;
@@ -87,7 +87,7 @@ class String
         return $this->translation;
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
     private static function allNamespacedKeysInContext($translations, array $currentNamespaceComponents)
     {
