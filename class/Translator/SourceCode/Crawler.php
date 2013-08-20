@@ -49,7 +49,7 @@ class Crawler
                     $this->registerAllTranslations(
                         $this->translations,
                         $this->contextDescription,
-                        $filename
+                        $filename->getRealPath() ?: $filename
                     );
                 }
             }
