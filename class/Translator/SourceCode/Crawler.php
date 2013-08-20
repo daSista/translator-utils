@@ -33,7 +33,7 @@ class Crawler
      * @param array $translations translations can be provided here
      * @param array $contextDescription context can be described here
      */
-    public function __construct($storage, $translateFinder, $translations = array(), $contextDescription = array())
+    public function __construct($storage, $translateFinder, $translations, $contextDescription)
     {
         $this->storage = $storage;
         $this->translateFinder = $translateFinder;
