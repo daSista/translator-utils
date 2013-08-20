@@ -25,7 +25,7 @@ class String
         );
     }
 
-    public static function find($keyWithNamespace, array $translations, array $contextDescriptions = array())
+    public static function find($keyWithNamespace, array $translations, array $contextDescriptions)
     {
         $key = self::keyPart($keyWithNamespace);
         $namespace = self::namespacePart($keyWithNamespace);

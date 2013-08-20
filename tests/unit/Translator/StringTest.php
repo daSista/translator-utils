@@ -40,15 +40,19 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             self::str(),
+
             String::find(
                 'validation/error:notEmpty',
+
                 array(
                     'validation' => array(
                         'error' => array(
                             'notEmpty' => 'Should be not empty'
                         )
                     )
-                )
+                ),
+
+                array()
             )
         );
     }
@@ -57,15 +61,19 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             String::create('validation/error/fatal:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+
             String::find(
                 'validation/error/fatal:notQuiteSimpleKeyToSearch',
+
                 array(
                     'validation' => array(
                         'error' => array(
                             'notQuiteSimpleKeyToSearch' => 'Should be not empty'
                         )
                     )
-                )
+                ),
+
+                array()
             )
         );
     }
@@ -74,13 +82,17 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             String::create('validation/error:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+
             String::find(
                 'validation/error:notQuiteSimpleKeyToSearch',
+
                 array(
                     'validation' => array(
                         'error' => 'This is an error'
                     )
-                )
+                ),
+
+                array()
             )
         );
     }
