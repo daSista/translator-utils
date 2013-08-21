@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Magomogo/translator-utils.png)](https://travis-ci.org/Magomogo/translator-utils)
+
 # About
 
 Utils for localization with Translator application: parsing out the i18n keys from `phtml`

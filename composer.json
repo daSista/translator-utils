@@ -1,5 +1,6 @@
 {
     "name": "magomogo/translator-utils",
+    "license": "MIT",
     "description": "PHP Utils for localization with Magomogo/Translator application",
     "repositories": [
         {
