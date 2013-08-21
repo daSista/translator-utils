@@ -18,7 +18,7 @@ class JsonView implements TranslateIteratorInterface
 
             function ($jsonValue, $jsonKey) use (&$translations)
             {
-                if ('i18nKey' == $jsonKey) {
+                if ('i18nKey' === $jsonKey) {
                     $translations[$jsonValue] = null;
                 }
             }
