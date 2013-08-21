@@ -25,7 +25,7 @@ class String
             $translation ?: self::defaultTranslation($key),
             $namespace,
             $description,
-            $source
+            self::sourceInit($source)
         );
     }
 
@@ -46,7 +46,7 @@ class String
             $translation ?: self::defaultTranslation($key),
             $namespace,
             $description,
-            $source
+            self::sourceInit($source)
         );
     }
 
@@ -178,5 +178,12 @@ class String
             $return[0] = ucfirst($return[0]);
         }
         return count($return) ? trim(preg_replace('/ +/', ' ', join(' ', $return))) : $key;
+    }
+
+    private static function sourceInit($source)
+    {
+        return (
+            is_null($source) ? array() : (is_array($source) ? $source : array($source))
+        );
     }
 }

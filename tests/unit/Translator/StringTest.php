@@ -12,6 +12,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
                 'key' => 'notEmpty',
                 'translation' => 'Should be not empty',
                 'namespace' => array('validation', 'error'),
+                'source' => array()
             ),
             self::str()->asDocument()
         );
@@ -61,7 +62,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function testFindAssignsTheSource()
     {
         $this->assertSame(
-            '/etc/etc',
+            array('/etc/etc'),
             String::find('foo', '/etc/etc', array('foo' => 'BAR'), array())->source()
         );
     }
@@ -145,7 +146,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
                 'translation' => 'Should be not empty',
                 'description' => 'This string needed to show validation error',
                 'namespace' => array('validation', 'error'),
-                'source' => '/dev/null'
+                'source' => array('/dev/null')
             ),
             self::str('This string needed to show validation error', '/dev/null')->asDocument()
         );
