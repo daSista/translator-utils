@@ -117,12 +117,23 @@ class CouchDb implements StorageInterface
     private static function mergeStrings($existing, $new, $behavior)
     {
         if ($behavior === self::BEHAVIOR_RESPECT_DATABASE_CONTENTS) {
+            $accSrc = self::accumulatedSource($existing, $new);
+
             if (array_key_exists('description', $existing) && !strlen($existing['description'])) {
                 unset($existing['description']);
             }
-            return array_merge($new, $existing);
+
+            return array_merge($new, $existing, array('source' => $accSrc));
         } else {
             return array_merge($existing, $new);
         }
+    }
+
+    private static function accumulatedSource($doc1, $doc2)
+    {
+        $s1 = isset($doc1['source']) ? $doc1['source'] : array();
+        $s2 = isset($doc2['source']) ? $doc2['source'] : array();
+
+        return array_values(array_unique(array_merge($s1, $s2)));
     }
 }

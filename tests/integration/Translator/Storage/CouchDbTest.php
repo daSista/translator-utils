@@ -100,4 +100,17 @@ class CouchDbIntegrationTest extends CouchDbTestCase
             array_diff_key(self::db()->findDocument($string->id())->body, array('_rev' => null))
         );
     }
+
+    public function testEnsurePresenceAccumulatesTheDistinctSources()
+    {
+        $s = String::create('moo1006:foo', 'bar', null, '/dev/stdin');
+
+        self::storage()->ensurePresence($s);
+        self::storage()->ensurePresence($s);
+        self::storage()->ensurePresence(String::create('moo1006:foo', 'bar', null, '/dev/null'));
+
+        $doc = self::db()->findDocument($s->id())->body;
+        $this->assertSame(array('/dev/stdin', '/dev/null'), $doc['source']);
+    }
+
 }
