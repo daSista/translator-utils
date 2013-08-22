@@ -20,10 +20,10 @@ class Schema implements DesignDocument
      *
      * <code>
      *  array(
-     *    "views" => array(
-     *      "name" => array(
-     *          "map"     => "code",
-     *          ["reduce" => "code"],
+     *    'views' => array(
+     *      'name' => array(
+     *          'map'     => 'code',
+     *          ['reduce' => 'code'],
      *      ),
      *      ...
      *    )
@@ -33,19 +33,22 @@ class Schema implements DesignDocument
     public function getData()
     {
         return array(
-            "lib" => array(
-                "messageformat" => file_get_contents(__DIR__ . '/lib/messageformat/messageformat.js'),
-                "locale" => 'module.exports = function(MessageFormat){'
+            'lib' => array(
+                'messageformat' => file_get_contents(__DIR__ . '/lib/messageformat/messageformat.js'),
+                'locale' => 'module.exports = function(MessageFormat){'
                     . file_get_contents(__DIR__ . "/lib/messageformat/locale/{$this->language}.js")
                     . '};'
             ),
             'views' => array(
-                "all_namespaces" => array(
-                    "map" => self::mapNamespaces(),
-                    "reduce" => 'function (keys, values) {return null;}'
+                'all_namespaces' => array(
+                    'map' => self::mapNamespaces(),
+                    'reduce' => 'function (keys, values) {return null;}'
                 ),
                 'translations' => array(
-                    "map" => self::mapDocumentsByNamespace()
+                    'map' => self::mapDocumentsByNamespace()
+                ),
+                'empty_namespace' => array(
+                    'map' => self::mapEmptyNamespace()
                 )
             ),
             'lists' => array(
@@ -57,7 +60,7 @@ class Schema implements DesignDocument
 
     private static function mapDocumentsByNamespace()
     {
-        return <<<'CouchJS'
+        return <<<CouchJS
 function (doc) {
     var i, combinedNs;
     if (doc.namespace) {
@@ -75,7 +78,7 @@ CouchJS;
 
     private static function mapNamespaces()
     {
-        return <<<'CouchJS'
+        return <<<CouchJS
 function (doc) {
     var i, combinedNs;
     if (doc.namespace) {
@@ -89,6 +92,20 @@ function (doc) {
 }
 CouchJS;
 
+    }
+
+    private static function mapEmptyNamespace()
+    {
+        return <<<CouchJS
+function (doc) {
+    if (
+        (null === doc.namespace) ||
+        (0 === doc.namespace.length)
+    ) {
+        emit([doc.key, doc.source], doc);
+    }
+}
+CouchJS;
     }
 
     private static function jsCompilationFunc($language)
