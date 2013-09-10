@@ -41,9 +41,9 @@ class Schema implements DesignDocument
             ),
             'views' => array(
                 'lib' => array(
-                    'hash' => 'module.exports = function(v) { '
+                    'hash' => 'module.exports = function(doc) { '
                         . file_get_contents(__DIR__ . '/lib/md5.min.js')
-                        . ' return this.md5(v);}',
+                        . " return this.md5(doc.namespace ? doc.namespace.join('/') + ':' + doc.key : doc.key);}",
                 ),
                 'all_namespaces' => array(
                     'map' => self::mapNamespaces(),
@@ -51,9 +51,6 @@ class Schema implements DesignDocument
                 ),
                 'translations' => array(
                     'map' => self::mapDocumentsByNamespace()
-                ),
-                'empty_namespace' => array(
-                    'map' => self::mapEmptyNamespace()
                 ),
                 'find' => array(
                     'map' => self::mapDocumentsByHash()
@@ -70,16 +67,22 @@ class Schema implements DesignDocument
     {
         return <<<'CouchJS'
 function (doc) {
-    var i, combinedNs;
+    var i,
+        combinedNs,
+        clone = function(doc) { return JSON.parse(JSON.stringify(doc));},
+        translation = clone(doc);
+
+    translation.hash = require('views/lib/hash')(doc);
+
     if (doc.namespace) {
         combinedNs = '';
         for (i = 0; i < doc.namespace.length; i++) {
             combinedNs = combinedNs + doc.namespace[i];
-            emit(combinedNs, doc);
+            emit(combinedNs, translation);
             combinedNs = combinedNs + '/'
         }
     }
-    emit('', doc);
+    emit('', translation);
 }
 CouchJS;
     }
@@ -89,7 +92,7 @@ CouchJS;
         return <<<'CouchJS'
 function (doc) {
     var hash = require('views/lib/hash');
-    emit(hash(doc.namespace ? doc.namespace.join('/') + ':' + doc.key : doc.key), doc);
+    emit(hash(doc), doc);
 }
 CouchJS;
     }
@@ -110,20 +113,6 @@ function (doc) {
 }
 CouchJS;
 
-    }
-
-    private static function mapEmptyNamespace()
-    {
-        return <<<'CouchJS'
-function (doc) {
-    if (
-        (null === doc.namespace) ||
-        (0 === doc.namespace.length)
-    ) {
-        emit([doc.key, doc.source], doc);
-    }
-}
-CouchJS;
     }
 
     private static function jsCompilationFunc($language)

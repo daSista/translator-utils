@@ -2,7 +2,6 @@
 namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
-use Doctrine\CouchDB\View\Result;
 use Translator\String;
 
 class CouchDb implements StorageInterface
