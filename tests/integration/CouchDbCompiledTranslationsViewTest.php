@@ -59,34 +59,11 @@ TEXT
         $http = new HttpClient();
         $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/po/translations', null, true);
 
-        $this->assertEquals(
-            <<<'PO'
-
-msgid "toBeEnquoted"
-msgstr "The \"String\" \\Here"
-
-msgctxt "validation"
-msgid "email"
-msgstr "Email"
-
-msgctxt "pager"
-msgid "totalAmountOfPages"
-msgstr "Total %d page(s)"
-
-msgctxt "validation/error"
-msgid "emailFormat"
-msgstr "Email format is incorrect"
-
-msgctxt "validation/error"
-msgid "notEmpty"
-msgstr "Should be not empty"
-
-msgctxt "pager"
-msgid "pageXFromY"
-msgstr "Page %d from $d"
-
-msgid "yes"
-msgstr "Yes"
+        $this->assertThat(
+            $response->body,
+            $this->logicalAnd(
+                $this->stringContains(
+                    <<<'PO'
 
 msgid "multiline"
 msgstr ""
@@ -96,9 +73,71 @@ msgstr ""
 "fourth line"
 
 PO
-            ,
-            $response->body
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgctxt "pager"
+msgid "pageXFromY"
+msgstr "Page %d from $d"
+
+PO
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgctxt "pager"
+msgid "totalAmountOfPages"
+msgstr "Total %d page(s)"
+
+PO
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgid "toBeEnquoted"
+msgstr "The \"String\" \\Here"
+
+PO
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgctxt "validation/error"
+msgid "emailFormat"
+msgstr "Email format is incorrect"
+
+PO
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgctxt "validation/error"
+msgid "notEmpty"
+msgstr "Should be not empty"
+
+PO
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgctxt "validation"
+msgid "email"
+msgstr "Email"
+
+PO
+                ),
+                $this->stringContains(
+                    <<<'PO'
+
+msgid "yes"
+msgstr "Yes"
+
+PO
+                )
+            )
         );
+
     }
 
     public function testIncludesDescriptionIntoPOComments()

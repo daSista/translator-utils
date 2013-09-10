@@ -71,10 +71,10 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         self::storage()->setTranslationValue($stringWithDescription);
         self::storage()->setTranslationValue($stringWithoutDescription);
 
-        $doc = self::db()->findDocument($stringWithDescription->id());
+        $doc = self::storage()->findDocument($stringWithDescription->hash());
 
-        $this->assertEquals('email:', $doc->body['translation']);
-        $this->assertEquals('Validation message', $doc->body['description']);
+        $this->assertEquals('email:', $doc['translation']);
+        $this->assertEquals('Validation message', $doc['description']);
     }
 
     public function testCanPreserveDatabaseContentWhenStringIsBeingRegistered()
@@ -85,7 +85,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
         $this->assertEquals(
             $string->asDocument(),
-            array_diff_key(self::db()->findDocument($string->id())->body, array('_rev' => null))
+            array_diff_key(self::storage()->findDocument($string->hash()), array('_id' => null, '_rev' => null))
         );
     }
 
@@ -97,7 +97,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
         $this->assertEquals(
             String::create('now', 'Accurate translation', 'Context description')->asDocument(),
-            array_diff_key(self::db()->findDocument($string->id())->body, array('_rev' => null))
+            array_diff_key(self::storage()->findDocument($string->hash()), array('_id' => null, '_rev' => null))
         );
     }
 
@@ -109,7 +109,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         self::storage()->ensurePresence($s);
         self::storage()->ensurePresence(String::create('moo1006:foo', 'bar', null, '/dev/null'));
 
-        $doc = self::db()->findDocument($s->id())->body;
+        $doc = self::storage()->findDocument($s->hash());
         $this->assertSame(array('/dev/stdin', '/dev/null'), $doc['source']);
     }
 

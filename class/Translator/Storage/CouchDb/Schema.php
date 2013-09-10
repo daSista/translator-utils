@@ -37,9 +37,14 @@ class Schema implements DesignDocument
                 'messageformat' => file_get_contents(__DIR__ . '/lib/messageformat/messageformat.js'),
                 'locale' => 'module.exports = function(MessageFormat){'
                     . file_get_contents(__DIR__ . "/lib/messageformat/locale/{$this->language}.js")
-                    . '};'
+                    . '};',
             ),
             'views' => array(
+                'lib' => array(
+                    'hash' => 'module.exports = function(v) { '
+                        . file_get_contents(__DIR__ . '/lib/md5.min.js')
+                        . ' return this.md5(v);}',
+                ),
                 'all_namespaces' => array(
                     'map' => self::mapNamespaces(),
                     'reduce' => 'function (keys, values) {return null;}'
@@ -49,6 +54,9 @@ class Schema implements DesignDocument
                 ),
                 'empty_namespace' => array(
                     'map' => self::mapEmptyNamespace()
+                ),
+                'find' => array(
+                    'map' => self::mapDocumentsByHash()
                 )
             ),
             'lists' => array(
@@ -60,7 +68,7 @@ class Schema implements DesignDocument
 
     private static function mapDocumentsByNamespace()
     {
-        return <<<CouchJS
+        return <<<'CouchJS'
 function (doc) {
     var i, combinedNs;
     if (doc.namespace) {
@@ -76,9 +84,19 @@ function (doc) {
 CouchJS;
     }
 
+    private static function mapDocumentsByHash()
+    {
+        return <<<'CouchJS'
+function (doc) {
+    var hash = require('views/lib/hash');
+    emit(hash(doc.namespace ? doc.namespace.join('/') + ':' + doc.key : doc.key), doc);
+}
+CouchJS;
+    }
+
     private static function mapNamespaces()
     {
-        return <<<CouchJS
+        return <<<'CouchJS'
 function (doc) {
     var i, combinedNs;
     if (doc.namespace) {
@@ -96,7 +114,7 @@ CouchJS;
 
     private static function mapEmptyNamespace()
     {
-        return <<<CouchJS
+        return <<<'CouchJS'
 function (doc) {
     if (
         (null === doc.namespace) ||

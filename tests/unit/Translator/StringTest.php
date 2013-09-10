@@ -8,7 +8,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             array(
-                '_id' => '9028b14b882e786e2c6bb5ea27e44ec7',
                 'key' => 'notEmpty',
                 'translation' => 'Should be not empty',
                 'namespace' => array('validation', 'error'),
@@ -141,7 +140,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             array(
-                '_id' => '9028b14b882e786e2c6bb5ea27e44ec7',
                 'key' => 'notEmpty',
                 'translation' => 'Should be not empty',
                 'description' => 'This string needed to show validation error',

@@ -66,7 +66,12 @@ class String
 
     public function id()
     {
-        return md5($this->key . $this->namespace);
+        return (strlen($this->namespace) ? $this->namespace . ':' : '') . $this->key;
+    }
+
+    public function hash()
+    {
+        return md5($this->id());
     }
 
     public function key()
@@ -87,7 +92,6 @@ class String
     public function asDocument()
     {
         $doc = array(
-            '_id' => $this->id(),
             'key' => $this->key,
             'translation' => $this->translation,
             'namespace' => array_filter(explode('/', $this->namespace)) ?: null,

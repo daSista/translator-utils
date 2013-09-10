@@ -2,6 +2,7 @@
 namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
+use Doctrine\CouchDB\View\Result;
 use Translator\String;
 
 class CouchDb implements StorageInterface
@@ -46,25 +47,37 @@ class CouchDb implements StorageInterface
         return array();
     }
 
+    /**
+     * @param string $hash
+     * @return array
+     */
+    public function findDocument($hash)
+    {
+        $query = $this->db->createViewQuery('main', 'find');
+        $query->setKey($hash);
+        $response = $query->execute();
+        return count($response) ? $response[0]['value'] : array();
+    }
+
 //--------------------------------------------------------------------------------------------------
 
     const BEHAVIOR_RESPECT_DATABASE_CONTENTS = 'BEHAVIOR_RESPECT_DATABASE_CONTENTS';
     const BEHAVIOR_OVERWRITE_DATABASE_CONTENTS = 'BEHAVIOR_OVERWRITE_DATABASE_CONTENTS';
 
+    /**
+     * @param String $string
+     * @param $behavior
+     */
     private function registerString($string, $behavior)
     {
         $this->createDatabaseIfNeeded();
 
-        /** @var $response \Doctrine\CouchDB\HTTP\Response */
-        $response = $this->db->findDocument($string->id());
+        $existingDoc = $this->findDocument($string->hash());
 
-        $doc = (
-            $response->status === 404 ?
-            $string->asDocument() :
-            self::mergeStrings($response->body, $string->asDocument(), $behavior)
-        );
+        $doc = empty($existingDoc) ?
+            $string->asDocument() : self::mergeStrings($existingDoc, $string->asDocument(), $behavior);
 
-        if (isset($doc['_rev'])) {
+        if (isset($doc['_id'])) {
             $this->db->putDocument($doc, $doc['_id']);
         } else {
             $this->db->postDocument($doc);
@@ -93,11 +106,7 @@ class CouchDb implements StorageInterface
     private static function singleTranslation($doc)
     {
         return array(
-            (
-                $doc['namespace'] ?
-                join('/', $doc['namespace']) . ':'
-                : ''
-            ) . $doc['key'] => $doc['translation']
+            ($doc['namespace'] ? join('/', $doc['namespace']) . ':' : '') . $doc['key'] => $doc['translation']
         );
     }
 
