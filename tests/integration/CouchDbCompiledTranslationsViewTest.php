@@ -31,6 +31,26 @@ JS
         );
     }
 
+    public function testSurvivesInvalidICUExpressions()
+    {
+        self::storage()->setTranslationValue(String::create('validation:email', '{,,}'));
+        $http = new HttpClient();
+
+        $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/js/translations', null, true);
+
+        $this->assertEquals(
+            <<<'JS'
+(function(g){g.i18n = {};
+g.i18n['validation'] = {};
+g.i18n['validation']['email'] = 'SyntaxError: Expected [a-zA-Z$_] but "," found.';
+})(window);
+JS
+            ,
+            $response->body
+        );
+
+    }
+
     public function testLoadsCorrectLocaleSettings()
     {
         $ruStorage = new CouchDb(self::db(), 'ru_RU');

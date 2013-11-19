@@ -125,7 +125,14 @@ function(doc, req) {
             mf = new MessageFormat('{$language}', require('lib/locale')(MessageFormat)),
             string,
             declaredNamespaces = {},
-            declaredStrings = {};
+            declaredStrings = {},
+            icuCompile = function (expr) {
+                try {
+                    return mf.precompile(mf.parse(expr))
+                } catch (e) {
+                    return '\\'' + e.toString().replace(new RegExp("'", "g"), "\\\\'") + '\\'';
+                }
+            };
 
         while (row = getRow()) {
             string = row.value;
@@ -143,9 +150,7 @@ function(doc, req) {
                 if (string.namespace && string.namespace.length) {
                     js = js + '[\\'' + string.namespace.join('/') + '\\']';
                 }
-                js = js + '[\\'' + string.key + '\\'] = '
-                    + mf.precompile(mf.parse(string.translation))
-                    + ';\\n';
+                js = js + '[\\'' + string.key + '\\'] = ' + icuCompile(string.translation) + ';\\n';
             }
         }
 
