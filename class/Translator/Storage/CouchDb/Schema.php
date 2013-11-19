@@ -128,9 +128,9 @@ function(doc, req) {
             declaredStrings = {},
             icuCompile = function (expr) {
                 try {
-                    return mf.precompile(mf.parse(expr))
+                    return mf.precompile(mf.parse(expr));
                 } catch (e) {
-                    return '\\'' + e.toString().replace(new RegExp("'", "g"), "\\\\'") + '\\'';
+                    return 'function(d){ return \\'' + expr.replace(new RegExp("'", "g"), "\\\\'") + '\\'; }';
                 }
             };
 
