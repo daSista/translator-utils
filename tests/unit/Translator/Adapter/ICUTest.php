@@ -105,10 +105,10 @@ class ICUTest extends \PHPUnit_Framework_TestCase
    other {They}
 } found {1, plural,
             =0 {no results}
-            one {1 result}
+            one {# result}
           other {# results}
         } in {2, plural,
-                  one {1 category}
+                  one {# category}
                 other {# categories}
              }
 ICU
@@ -137,19 +137,19 @@ ICU
                     male {нашел }
                   female {нашла }
                    other {нашли }
-                }1 результат}
-        few {{0, select,
-                    male {нашел }
-                  female {нашла }
-                   other {нашли }
-                }2 результата}
-      other {{0, select,
+                }# результат}
+        many {{0, select,
                     male {нашел }
                   female {нашла }
                    other {нашли }
                 }# результатов}
+        other {{0, select,
+                    male {нашел }
+                  female {нашла }
+                   other {нашли }
+                }# результата}
     } в {2, plural,
-              one {1 категории}
+              one {# категории}
             other {# категориях}
          }
 ICU
