@@ -5,6 +5,9 @@
         <span class="label label-success" ng-show="order.paid">{{'paid'|i18n}}</span>
     </span>
 </h2>
+<h3>
+    {{'orderComment' | i18n : { "comment": order.comment, "createdTimestamp": order.createdTimestamp} }}
+</h3>
 
 <dl class="dl-horizontal">
     <dt>{{'affiliate' | i18n}}</dt>

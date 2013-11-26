@@ -15,7 +15,8 @@ class AngularViewTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             array(
-                'orderNumber' => array('orderId', 'order.createdTimestamp'),
+                'orderNumber' => null,
+                'orderComment' => null,
                 'notPaid' => null,
                 'paid' => null,
                 'affiliate' => null,
