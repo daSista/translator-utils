@@ -71,7 +71,7 @@ class String
 
     public function hash()
     {
-        return md5($this->id());
+        return md5($this->namespace . $this->key);
     }
 
     public function key()

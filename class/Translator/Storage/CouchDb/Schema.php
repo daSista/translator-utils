@@ -43,7 +43,7 @@ class Schema implements DesignDocument
                 'lib' => array(
                     'hash' => 'module.exports = function(doc) { '
                         . file_get_contents(__DIR__ . '/lib/md5.min.js')
-                        . " return this.md5(doc.namespace ? doc.namespace.join('/') + ':' + doc.key : doc.key);}",
+                        . " return this.md5((doc.namespace || []).join('/') + doc.key);}",
                 ),
                 'all_namespaces' => array(
                     'map' => self::mapNamespaces(),
