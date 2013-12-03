@@ -173,10 +173,11 @@ function(doc, req) {
             enquote = function(str) {
                 return str.replace(new RegExp("[\\"\\\\\\\\]", "g"), "\\\\$&");
             },
-            miltiLineTranslation = function(str) {
-                var i, parts = str.split("\\n"), msg = "msgstr \\"\\"\\n";
+            multiLineTranslation = function(str) {
+                var parts = str.split("\\n"),
+                msg = "msgstr \\"\\"\\n";
 
-                for (var i=0; i < parts.length; i++) {
+                for (var i = 0; i < parts.length; i++) {
                     msg = msg + "\\""
                         + enquote(parts[i])
                         + (i + 1 === parts.length ? "" : "\\\\n")
@@ -184,13 +185,17 @@ function(doc, req) {
                 }
                 return msg;
             },
-            miltiLineDescription = function(str) {
-                var i, parts = str.split("\\n"), descr = "";
-                for (var i=0; i < parts.length; i++) {
+            multiLineDescription = function(str) {
+                var parts = str.split("\\n"),
+                descr = "";
+                for (var i = 0; i < parts.length; i++) {
                     descr = descr + "#. " + parts[i] + "\\n";
                 }
                 return descr;
             };
+
+        var encoding = "MIME-Version: 1.0\\nContent-Type: text/plain; charset=UTF-8\\nContent-Transfer-Encoding: 8bit\\n";
+        po = po + "\\nmsgid \\"\\"\\n" + multiLineTranslation(encoding);
 
         while (row = getRow()) {
             string = row.value;
@@ -201,7 +206,7 @@ function(doc, req) {
                 po = po + '\\n';
 
                 if (string.description && string.description.length) {
-                    po = po + miltiLineDescription(string.description);
+                    po = po + multiLineDescription(string.description);
                 }
 
                 if (string.namespace && string.namespace.length) {
@@ -210,7 +215,7 @@ function(doc, req) {
 
                 po = po + 'msgid "' + enquote(string.key)  + '"\\n';
                 if (string.translation.indexOf('\\n') !== -1) {
-                    po = po + miltiLineTranslation(string.translation);
+                    po = po + multiLineTranslation(string.translation);
                 } else {
                     po = po + 'msgstr "' + enquote(string.translation) + '"\\n';
                 }
