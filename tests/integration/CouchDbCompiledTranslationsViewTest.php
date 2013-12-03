@@ -172,7 +172,7 @@ DESC
         $http = new HttpClient();
         $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/po/translations', null, true);
 
-        $this->assertEquals(<<<'PO'
+        $this->assertContains(<<<'PO'
 
 #. this string needed
 #. for special case

@@ -194,6 +194,9 @@ function(doc, req) {
                 return descr;
             };
 
+        var encoding = "MIME-Version: 1.0\\nContent-Type: text/plain; charset=UTF-8\\nContent-Transfer-Encoding: 8bit\\n";
+        po = po + "\\nmsgid \\"\\"\\n" + multiLineTranslation(encoding);
+
         while (row = getRow()) {
             string = row.value;
 
