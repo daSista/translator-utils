@@ -184,4 +184,22 @@ PO
             $response->body
         );
     }
+
+    public function testIncludesEncodingHeadersIntoPO()
+    {
+        self::storage()->setTranslationValue(String::create('test','test'));
+        $http = new HttpClient();
+        $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/po/translations', null, true);
+        $this->assertContains(
+            <<<'PO'
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+PO
+            ,
+            $response->body
+        );
+    }
 }
