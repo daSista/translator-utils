@@ -49,6 +49,11 @@ class Bulk extends CouchDb
         }
 
         $bulkUpdater->execute();
+
+        $this->stringsStack = array(
+            self::BEHAVIOR_RESPECT_DATABASE_CONTENTS => array(),
+            self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS => array(),
+        );
     }
 
 //----------------------------------------------------------------------------------------------------------------------
