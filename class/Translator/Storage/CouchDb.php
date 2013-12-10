@@ -60,9 +60,6 @@ class CouchDb implements StorageInterface
 
 //--------------------------------------------------------------------------------------------------
 
-    const BEHAVIOR_RESPECT_DATABASE_CONTENTS = 'BEHAVIOR_RESPECT_DATABASE_CONTENTS';
-    const BEHAVIOR_OVERWRITE_DATABASE_CONTENTS = 'BEHAVIOR_OVERWRITE_DATABASE_CONTENTS';
-
     /**
      * @param String $string
      * @param $behavior
