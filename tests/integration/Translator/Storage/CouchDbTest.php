@@ -120,10 +120,7 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         $bulkStorage->ensurePresence(String::create('two', 'Two'));
         $bulkStorage->commit();
 
-        $docs = array_values(array_filter(
-            self::db()->allDocs()->body['rows'],
-            function ($row) { return $row['id'] !== '_design/main'; }
-        ));
+        $docs = $this->allButDesignDocument();
 
         $this->assertCount(2, $docs);
         $this->assertSame('one', $docs[0]['doc']['key']);
@@ -141,14 +138,29 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         $bulkStorage->ensurePresence(String::create('two', 'Two'));
         $bulkStorage->commit();
 
-        $docs = array_filter(
-            self::db()->allDocs()->body['rows'],
-            function ($row) { return $row['id'] !== '_design/main' ; }
-        );
+        $docs = $this->allButDesignDocument();
 
         $this->assertCount(2, $docs);
         $this->assertSame('one', $docs[0]['doc']['key']);
         $this->assertStringStartsWith('2-', $docs[0]['doc']['_rev'], 'second revision');
 
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return array
+     */
+    private function allButDesignDocument()
+    {
+        $docs = array_values(
+            array_filter(
+                self::db()->allDocs()->body['rows'],
+                function ($row) {
+                    return $row['id'] !== '_design/main';
+                }
+            )
+        );
+        return $docs;
     }
 }
