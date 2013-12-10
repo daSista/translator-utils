@@ -2,7 +2,6 @@
 
 namespace Translator\Storage\CouchDb;
 
-use Doctrine\CouchDB\CouchDBClient;
 use Translator\Storage\CouchDb;
 use Translator\String;
 
@@ -35,25 +34,22 @@ class Bulk extends CouchDb
     {
         $this->createDatabaseIfNeeded();
 
-        $documents = array_merge(
-            $this->createDocuments($this->stringsStack[self::BEHAVIOR_RESPECT_DATABASE_CONTENTS],
-                self::BEHAVIOR_RESPECT_DATABASE_CONTENTS),
-            $this->createDocuments($this->stringsStack[self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS],
-                self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS)
-        );
+        foreach (array(
+                     self::BEHAVIOR_RESPECT_DATABASE_CONTENTS,
+                     self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS
+                 ) as $behavior) {
 
-        $bulkUpdater = $this->db->createBulkUpdater();
+            $existingStrings = $this->loadExisting($this->stringsStack[$behavior]);
+            $bulkUpdater = $this->db->createBulkUpdater();
 
-        foreach ($documents as $doc) {
-            $bulkUpdater->updateDocument($doc);
+            /** @var String $string */
+            foreach ($this->stringsStack[$behavior] as $string) {
+                $bulkUpdater->updateDocument($this->createDocument($string, $behavior, $existingStrings));
+            }
+
+            $bulkUpdater->execute();
+            $this->stringsStack[$behavior] = array();
         }
-
-        $bulkUpdater->execute();
-
-        $this->stringsStack = array(
-            self::BEHAVIOR_RESPECT_DATABASE_CONTENTS => array(),
-            self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS => array(),
-        );
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -67,10 +63,35 @@ class Bulk extends CouchDb
         $this->stringsStack[$behavior][] = $string;
     }
 
-    private function createDocuments($strings, $behavior)
+    /**
+     * @param String $string
+     * @param string $behavior self::BEHAVIOR_*
+     * @param array $existingStrings
+     * @return array
+     */
+    private function createDocument($string, $behavior, $existingStrings)
+    {
+        return array_key_exists($string->hash(), $existingStrings) ?
+            self::mergeStrings($existingStrings[$string->hash()], $string->asDocument(), $behavior)
+            :
+            $string->asDocument();
+    }
+
+    /**
+     * @param $strings
+     * @return array
+     */
+    private function loadExisting($strings)
     {
         $query = $this->db->createViewQuery('main', 'find');
-        $query->setKeys(array_map(function ($string) { return $string->hash();}, $strings));
+        $query->setKeys(
+            array_map(
+                function ($string) {
+                    return $string->hash();
+                },
+                $strings
+            )
+        );
 
         $existingStrings = array();
         foreach ($query->execute() as $record) {
@@ -84,17 +105,6 @@ class Bulk extends CouchDb
 
             $existingStrings[$string->hash()] = $doc;
         }
-
-        $merged = array();
-        foreach ($strings as $string) {
-            $doc = array_key_exists($string->hash(), $existingStrings) ?
-                self::mergeStrings($existingStrings[$string->hash()], $string->asDocument(), $behavior)
-                :
-                $string->asDocument();
-
-            $merged[] = $doc;
-        }
-
-        return $merged;
+        return $existingStrings;
     }
 }
