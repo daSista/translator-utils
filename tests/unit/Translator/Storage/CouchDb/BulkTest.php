@@ -21,7 +21,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
     {
         $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
         $connection->shouldReceive('request')
-            ->with('GET', anything())
+            ->with('POST', '/fake_db_name/_design/main/_view/find?', anything())
             ->andReturn(new Response(200, array(), array('rows' => array()), true));
 
         $connection->shouldReceive('request')->with('POST', '/fake_db_name/_bulk_docs', m::on(function ($arg) {
@@ -56,7 +56,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
     {
         $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
         $connection->shouldReceive('request')
-            ->with('GET', anything())
+            ->with('POST', '/fake_db_name/_design/main/_view/find?', anything())
             ->andReturn(new Response(200, array(), array('rows' => array(
                     array(
                         'value' => array(

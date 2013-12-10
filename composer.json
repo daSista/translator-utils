@@ -18,6 +18,10 @@
                     "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Magomogo/couchdb-client"
         }
     ],
     "require": {
