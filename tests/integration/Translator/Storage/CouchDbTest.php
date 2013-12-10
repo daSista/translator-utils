@@ -120,10 +120,10 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         $bulkStorage->ensurePresence(String::create('two', 'Two'));
         $bulkStorage->commit();
 
-        $docs = array_filter(
+        $docs = array_values(array_filter(
             self::db()->allDocs()->body['rows'],
-            function ($row) { return $row['id'] !== '_design/main' ; }
-        );
+            function ($row) { return $row['id'] !== '_design/main'; }
+        ));
 
         $this->assertCount(2, $docs);
         $this->assertSame('one', $docs[0]['doc']['key']);
