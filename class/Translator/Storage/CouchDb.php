@@ -119,7 +119,7 @@ class CouchDb implements StorageInterface
         return in_array($this->db->getDatabase(), $this->db->getAllDatabases());
     }
 
-    private static function mergeStrings($existing, $new, $behavior)
+    protected static function mergeStrings($existing, $new, $behavior)
     {
         if ($behavior === self::BEHAVIOR_RESPECT_DATABASE_CONTENTS) {
             $accSrc = self::accumulatedSource($existing, $new);
