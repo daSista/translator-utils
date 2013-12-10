@@ -8,26 +8,10 @@ use Translator\String;
 
 class Bulk extends CouchDb
 {
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var CouchDBClient
-     */
-    private $db;
-
     private $stringsStack = array(
         self::BEHAVIOR_RESPECT_DATABASE_CONTENTS => array(),
         self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS => array(),
     );
-
-    public function __construct($dbConnection, $locale)
-    {
-        $this->db = $dbConnection;
-        $this->locale = $locale;
-    }
 
     /**
      * @param String $string
@@ -49,6 +33,8 @@ class Bulk extends CouchDb
 
     public function commit()
     {
+        $this->createDatabaseIfNeeded();
+
         $documents = array_merge(
             $this->createDocuments($this->stringsStack[self::BEHAVIOR_RESPECT_DATABASE_CONTENTS],
                 self::BEHAVIOR_RESPECT_DATABASE_CONTENTS),

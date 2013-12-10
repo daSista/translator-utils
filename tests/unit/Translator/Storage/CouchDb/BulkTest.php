@@ -17,23 +17,6 @@ class BulkTest extends \PHPUnit_Framework_TestCase
         self::storage(self::couchDb($connection))->ensurePresence(self::yesString());
     }
 
-    public function testChecksExistingDocumentsBeforeBulkUpdate()
-    {
-        $query = m::mock();
-        $query->shouldReceive('setKeys')->with(array(
-                self::yesString()->hash(),
-                self::noString()->hash(),
-            ))->once();
-        $query->shouldReceive('setKeys');
-        $query->shouldIgnoreMissing();
-
-        $storage = self::storage(m::mock('Doctrine\\CouchDB\\HTTP\\Client',
-                array('createViewQuery' => $query, 'createBulkUpdater' => self::noObj())));
-        $storage->ensurePresence(self::yesString());
-        $storage->ensurePresence(self::noString());
-        $storage->commit();
-    }
-
     public function testBulkUpdateNewTranslations()
     {
         $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
@@ -60,8 +43,9 @@ class BulkTest extends \PHPUnit_Framework_TestCase
                         ),
                     );
             }))->once();
+        $connection->shouldReceive('request');
 
-        $storage = self::storage(self::couchDb($connection));
+        $storage = self::storage(m::mock(self::couchDb($connection), array('getAllDatabases' => array('fake_db_name'))));
         $storage->ensurePresence(self::yesString());
         $storage->ensurePresence(self::noString());
         $storage->commit();
@@ -107,8 +91,9 @@ class BulkTest extends \PHPUnit_Framework_TestCase
                         ),
                     );
                 }))->once();
+        $connection->shouldReceive('request');
 
-        $storage = self::storage(self::couchDb($connection));
+        $storage = self::storage(m::mock(self::couchDb($connection), array('getAllDatabases' => array('fake_db_name'))));
         $storage->ensurePresence(self::yesString());
         $storage->ensurePresence(self::noString());
         $storage->commit();

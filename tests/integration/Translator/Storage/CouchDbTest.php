@@ -113,4 +113,42 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         $this->assertSame(array('/dev/stdin', '/dev/null'), $doc['source']);
     }
 
+    public function testBulkInsertWorks()
+    {
+        $bulkStorage = self::bulkStorage();
+        $bulkStorage->ensurePresence(String::create('one', 'One'));
+        $bulkStorage->ensurePresence(String::create('two', 'Two'));
+        $bulkStorage->commit();
+
+        $docs = array_filter(
+            self::db()->allDocs()->body['rows'],
+            function ($row) { return $row['id'] !== '_design/main' ; }
+        );
+
+        $this->assertCount(2, $docs);
+        $this->assertSame('one', $docs[0]['doc']['key']);
+        $this->assertSame('two', $docs[1]['doc']['key']);
+
+    }
+
+    public function testBulkUpdateWorks()
+    {
+        $string = String::create('one', 'One');
+        self::storage()->setTranslationValue($string);
+
+        $bulkStorage = self::bulkStorage();
+        $bulkStorage->ensurePresence(String::create('one', 'One'));
+        $bulkStorage->ensurePresence(String::create('two', 'Two'));
+        $bulkStorage->commit();
+
+        $docs = array_filter(
+            self::db()->allDocs()->body['rows'],
+            function ($row) { return $row['id'] !== '_design/main' ; }
+        );
+
+        $this->assertCount(2, $docs);
+        $this->assertSame('one', $docs[0]['doc']['key']);
+        $this->assertStringStartsWith('2-', $docs[0]['doc']['_rev'], 'second revision');
+
+    }
 }
