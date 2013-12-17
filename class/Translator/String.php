@@ -38,8 +38,8 @@ class String
     {
         $key = self::keyPart($keyWithNamespace);
         $namespace = self::namespacePart($keyWithNamespace);
-        $translation = self::searchInArray($translations, $namespace, $key);
-        $description = self::searchInArray($contextDescriptions, $namespace, $key);
+        $translation = self::searchStringInArray($translations, $namespace, $key);
+        $description = self::searchStringInArray($contextDescriptions, $namespace, $key);
 
         return new self(
             $key,
@@ -157,7 +157,7 @@ class String
      * @param $key
      * @return null
      */
-    private static function searchInArray(array $array, $namespace, $key)
+    private static function searchStringInArray(array $array, $namespace, $key)
     {
         $readFrom = $array;
         foreach (array_filter(explode('/', $namespace)) as $ns) {
@@ -167,7 +167,7 @@ class String
                 return null;
             }
         }
-        $translation = array_key_exists($key, $readFrom) ? $readFrom[$key] : null;
+        $translation = array_key_exists($key, $readFrom) && is_string($readFrom[$key]) ? $readFrom[$key] : null;
         return $translation;
     }
 

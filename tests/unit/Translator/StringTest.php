@@ -108,6 +108,29 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfKeyProvidesOtherTranslations()
+    {
+        $this->assertEquals(
+            String::create('validation:error', 'Error'),
+
+            String::find(
+                'validation:error',
+                null,
+
+                array(
+                    'validation' => array(
+                        'error' => array(
+                            'email' => 'This is an error',
+                            'maxLength' => 'This is an error',
+                        )
+                    )
+                ),
+
+                array()
+            )
+        );
+    }
+
     public function testAllNamespacedKeysReturnsNothingForAnEmptyTranslationsArray()
     {
         $this->assertEquals(array(), String::allNamespacedKeys(array()));
