@@ -52,6 +52,9 @@ class Schema implements DesignDocument
                 'translations' => array(
                     'map' => self::mapDocumentsByNamespace()
                 ),
+                'sorted_translations' => array(
+                    'map' => self::mapSortedDocumentsByNamespace()
+                ),
                 'find' => array(
                     'map' => self::mapDocumentsByHash()
                 )
@@ -79,10 +82,36 @@ function (doc) {
         for (i = 0; i < doc.namespace.length; i++) {
             combinedNs = combinedNs + doc.namespace[i];
             emit(combinedNs, translation);
-            combinedNs = combinedNs + '/'
+            combinedNs = combinedNs + '/';
         }
     }
     emit('', translation);
+}
+CouchJS;
+    }
+
+    private static function mapSortedDocumentsByNamespace()
+    {
+        return <<<'CouchJS'
+function (doc) {
+    var i,
+        combinedNs,
+        combinedNsKey,
+        clone = function(doc) { return JSON.parse(JSON.stringify(doc));},
+        translation = clone(doc);
+
+    translation.hash = require('views/lib/hash')(doc);
+
+    if (doc.namespace) {
+        combinedNs = '';
+        combinedNsKey = doc.namespace.join('/') + ':' + doc.key;
+        for (i = 0; i < doc.namespace.length; i++) {
+            combinedNs = combinedNs + doc.namespace[i];
+            emit([ combinedNs, combinedNsKey ], translation);
+            combinedNs = combinedNs + '/';
+        }
+    }
+    emit([ '', doc.key ], translation);
 }
 CouchJS;
     }
