@@ -27,6 +27,21 @@ class CouchDbIntegrationTest extends CouchDbTestCase
         );
     }
 
+    public function testFetchesTranslationsForSeveralNamespaces()
+    {
+        self::fillInStorage();
+
+        $this->assertEquals(
+            array(
+                'validation/error:notEmpty' => 'Should be not empty',
+                'validation/error:emailFormat' => 'Email format is incorrect',
+                'pager:pageXFromY' => 'Page %d from $d',
+                'pager:totalAmountOfPages' => 'Total %d page(s)',
+            ),
+            self::storage()->mappedTranslations(array('validation/error', 'pager'))
+        );
+    }
+
     public function testSurvivesWhenThereAreNoTranslation()
     {
         self::storage()->mappedTranslations('some/namespace');

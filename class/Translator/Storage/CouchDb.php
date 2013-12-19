@@ -37,6 +37,10 @@ class CouchDb implements StorageInterface
         $this->registerString($string, self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS);
     }
 
+    /**
+     * @param null|string|array $namespace
+     * @return array
+     */
     public function mappedTranslations($namespace = null)
     {
         if ($this->databaseExists()) {
@@ -85,7 +89,11 @@ class CouchDb implements StorageInterface
         $translations = array();
 
         $query = $this->db->createViewQuery('main', 'translations');
-        $query->setKey($namespace);
+        if (is_array($namespace)) {
+            $query->setKeys(array_values($namespace));
+        } else {
+            $query->setKey($namespace);
+        }
 
         foreach ($query->execute() as $record) {
             $doc = $record['value'];
