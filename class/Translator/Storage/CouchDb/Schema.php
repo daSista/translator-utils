@@ -5,11 +5,11 @@ use Doctrine\CouchDB\View\DesignDocument;
 
 class Schema implements DesignDocument
 {
-    private $language;
+    private $locale;
 
     public function __construct($locale)
     {
-        $this->language = strtolower(substr($locale, 0, 2));
+        $this->locale = $locale;
     }
 
     /**
@@ -36,7 +36,7 @@ class Schema implements DesignDocument
             'lib' => array(
                 'messageformat' => file_get_contents(__DIR__ . '/lib/messageformat/messageformat.js'),
                 'locale' => 'module.exports = function(MessageFormat){'
-                    . file_get_contents(__DIR__ . "/lib/messageformat/locale/{$this->language}.js")
+                    . file_get_contents(__DIR__ . "/lib/messageformat/locale/{$this->language()}.js")
                     . '};',
             ),
             'views' => array(
@@ -60,10 +60,15 @@ class Schema implements DesignDocument
                 )
             ),
             'lists' => array(
-                'js' => self::jsCompilationFunc($this->language),
-                'po' => self::poCompilationFunc()
+                'js' => self::jsCompilationFunc($this->language()),
+                'po' => self::poCompilationFunc($this->locale)
             )
         );
+    }
+
+    private function language()
+    {
+        return strtolower(substr($this->locale, 0, 2));
     }
 
     private static function mapDocumentsByNamespace()
@@ -190,7 +195,7 @@ CouchJS;
 
     }
 
-    private static function poCompilationFunc()
+    private static function poCompilationFunc($locale)
     {
         return <<<CouchJS
 function(doc, req) {
@@ -223,7 +228,7 @@ function(doc, req) {
                 return descr;
             };
 
-        var encoding = "MIME-Version: 1.0\\nContent-Type: text/plain; charset=UTF-8\\nContent-Transfer-Encoding: 8bit\\n";
+        var encoding = "MIME-Version: 1.0\\nContent-Type: text/plain; charset=UTF-8\\nContent-Transfer-Encoding: 8bit\\nLanguage: {$locale}\\n";
         po = po + "\\nmsgid \\"\\"\\n" + multiLineTranslation(encoding);
 
         while (row = getRow()) {
