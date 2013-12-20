@@ -144,6 +144,7 @@ function (doc) {
             combinedNs = combinedNs + '/'
         }
     }
+    emit('', null);
 }
 CouchJS;
 
