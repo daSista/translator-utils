@@ -99,6 +99,26 @@ class BulkTest extends \PHPUnit_Framework_TestCase
         $storage->commit();
     }
 
+    public function testDoesAutoCommitOnEvery100StashedTranslations()
+    {
+        $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
+        $connection->shouldReceive('request')
+            ->with('POST', '/fake_db_name/_design/main/_view/find?', anything())
+            ->andReturn(new Response(200, array(), array('rows' => array()), true));
+
+        $connection->shouldReceive('request')->with('POST', '/fake_db_name/_bulk_docs', m::any())->twice();
+
+        $storage = self::storage(
+            m::mock(self::couchDb($connection), array('getAllDatabases' => array('fake_db_name')))
+        );
+
+        for ($i = 0; $i < 201; $i++) {
+            $storage->ensurePresence(self::yesString());
+        }
+
+    }
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
     private static function storage($couch)

@@ -39,16 +39,19 @@ class Bulk extends CouchDb
                      self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS
                  ) as $behavior) {
 
-            $existingStrings = $this->loadExisting($this->stringsStack[$behavior]);
-            $bulkUpdater = $this->db->createBulkUpdater();
+            if (count($this->stringsStack[$behavior]) > 0) {
 
-            /** @var String $string */
-            foreach ($this->stringsStack[$behavior] as $string) {
-                $bulkUpdater->updateDocument($this->createDocument($string, $behavior, $existingStrings));
+                $existingStrings = $this->loadExisting($this->stringsStack[$behavior]);
+                $bulkUpdater = $this->db->createBulkUpdater();
+
+                /** @var String $string */
+                foreach ($this->stringsStack[$behavior] as $string) {
+                    $bulkUpdater->updateDocument($this->createDocument($string, $behavior, $existingStrings));
+                }
+
+                $bulkUpdater->execute();
+                $this->stringsStack[$behavior] = array();
             }
-
-            $bulkUpdater->execute();
-            $this->stringsStack[$behavior] = array();
         }
     }
 
@@ -60,6 +63,9 @@ class Bulk extends CouchDb
      */
     private function registerString($string, $behavior)
     {
+        if (count($this->stringsStack[$behavior]) >= 100) {
+            $this->commit();
+        }
         $this->stringsStack[$behavior][] = $string;
     }
 
