@@ -32,8 +32,6 @@ class Bulk extends CouchDb
 
     public function commit()
     {
-        $this->createDatabaseIfNeeded();
-
         foreach (array(
                      self::BEHAVIOR_RESPECT_DATABASE_CONTENTS,
                      self::BEHAVIOR_OVERWRITE_DATABASE_CONTENTS

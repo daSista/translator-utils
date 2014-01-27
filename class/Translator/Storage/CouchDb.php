@@ -43,11 +43,7 @@ class CouchDb implements StorageInterface
      */
     public function mappedTranslations($namespace = null)
     {
-        if ($this->databaseExists()) {
-            return $this->queryView($namespace ?: '');
-        }
-
-        return array();
+        return $this->queryView($namespace ?: '');
     }
 
     /**
@@ -70,8 +66,6 @@ class CouchDb implements StorageInterface
      */
     private function registerString($string, $behavior)
     {
-        $this->createDatabaseIfNeeded();
-
         $existingDoc = $this->findDocument($string->hash());
 
         $doc = empty($existingDoc) ?
@@ -112,19 +106,6 @@ class CouchDb implements StorageInterface
         return array(
             ($doc['namespace'] ? join('/', $doc['namespace']) . ':' : '') . $doc['key'] => $doc['translation']
         );
-    }
-
-    protected function createDatabaseIfNeeded()
-    {
-        if (!$this->databaseExists()) {
-            $this->db->createDatabase($this->db->getDatabase());
-            $this->db->createDesignDocument('main', new CouchDb\Schema($this->locale));
-        }
-    }
-
-    private function databaseExists()
-    {
-        return in_array($this->db->getDatabase(), $this->db->getAllDatabases());
     }
 
     protected static function mergeStrings($existing, $new, $behavior)
