@@ -9,6 +9,7 @@ templates, AngularJS partials, and `json` data; with the subsequent storage in C
 
 * php5-intl
 * couchdb
+* translator-couch npm module installed globally, or added to PATH
 
 # License: MIT
 
