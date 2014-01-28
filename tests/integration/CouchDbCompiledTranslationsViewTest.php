@@ -53,7 +53,7 @@ JS
 
     public function testLoadsCorrectLocaleSettings()
     {
-        $ruStorage = new CouchDb(self::db(), 'ru_RU');
+        $ruStorage = new CouchDb(self::db());
 
         $ruStorage->setTranslationValue(String::create('num', '{NUM, plural, one: {одна овца} few {# овцы} other {# овец}}'));
         $http = new HttpClient();

@@ -25,7 +25,7 @@ class ApplicationIntegrationTest extends CouchDbTestCase
 
     private static function app()
     {
-        $translationsStorage = new Storage\CouchDb(self::db(), 'ru_RU');
+        $translationsStorage = new Storage\CouchDb(self::db());
 
         return new Application(
             '/translator',

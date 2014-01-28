@@ -15,17 +15,14 @@ class DummyDesignDocument implements DesignDocument
 
 class CouchDb implements StorageInterface
 {
-    protected $locale;
-
     /**
      * @var CouchDBClient
      */
     protected $db;
 
-    public function __construct($dbConnection, $locale)
+    public function __construct($dbConnection)
     {
         $this->db = $dbConnection;
-        $this->locale = $locale;
     }
 
     /**

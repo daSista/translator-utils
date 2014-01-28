@@ -123,7 +123,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
 
     private static function storage($couch)
     {
-        return new Bulk($couch, 'de_CH');
+        return new Bulk($couch);
     }
 
     private static function couchDb($connection)
