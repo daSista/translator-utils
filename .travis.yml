@@ -1,7 +1,7 @@
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install build-essential
- - mkdir /tmp/njs && cd /tmp/njs && curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1 && ./configure && sudo make install
+ - DIR="$(pwd)" && mkdir /tmp/njs && cd /tmp/njs && curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1 && ./configure && sudo make install && cd $DIR
  - sudo npm -g install translator-couch
 
 language: php
@@ -15,7 +15,7 @@ services: couchdb
 
 before_script:
   - composer install --dev
-  - translator-couch translator_couchdb_storage_integration_test en_US
+  - translator-couch translator_couchdb_storage_integration_test ru_RU
 
 
 script: ./tests/run.sh
