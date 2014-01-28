@@ -2,7 +2,16 @@
 namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
+use Doctrine\CouchDB\View\DesignDocument;
 use Translator\String;
+
+class DummyDesignDocument implements DesignDocument
+{
+     public function getData()
+     {
+         return array();
+     }
+}
 
 class CouchDb implements StorageInterface
 {
@@ -52,7 +61,7 @@ class CouchDb implements StorageInterface
      */
     public function findDocument($hash)
     {
-        $query = $this->db->createViewQuery('main', 'find');
+        $query = $this->db->createViewQuery('main', 'find', new DummyDesignDocument);
         $query->setKey($hash);
         $response = $query->execute();
         return count($response) ? $response[0]['value'] : array();
@@ -83,6 +92,7 @@ class CouchDb implements StorageInterface
         $translations = array();
 
         $query = $this->db->createViewQuery('main', 'translations');
+
         if (is_array($namespace)) {
             $query->setKeys(array_values($namespace));
         } else {
