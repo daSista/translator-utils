@@ -15,7 +15,7 @@ services: couchdb
 
 before_script:
   - composer install --dev
-  - translator-couch translator_couchdb_storage_integration_test ru_RU
+  - translator-couch translator_couchdb_storage_integration_test_ ru_RU
 
 
 script: ./tests/run.sh
