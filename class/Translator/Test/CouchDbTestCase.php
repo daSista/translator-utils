@@ -11,7 +11,7 @@ abstract class CouchDbTestCase extends \PHPUnit_Framework_TestCase
 {
     protected function setup()
     {
-        self::db()->deleteDatabase(TEST_COUCHDB_NAME);
+        exec('translator-couch ' . TEST_COUCHDB_PREFIX . ' ' . TEST_COUCHDB_LOCALE);
     }
 
     protected function tearDown()
