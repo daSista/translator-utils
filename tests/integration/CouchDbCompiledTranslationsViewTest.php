@@ -15,16 +15,14 @@ class CouchDbCompiledTranslationsViewTest extends CouchDbTestCase
 
         $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/js/translations', null, true);
 
-        $this->assertEquals(
+        $this->assertContains(
             <<<'JS'
-(function(g){g.i18n = {};
 g.i18n['validation'] = {};
 g.i18n['validation']['email'] = function(d){
 var r = "";
 r += "Email";
 return r;
 };
-})(window);
 JS
             ,
             $response->body
@@ -38,12 +36,10 @@ JS
 
         $response = $http->request('GET', '/' . TEST_COUCHDB_NAME . '/_design/main/_list/js/translations', null, true);
 
-        $this->assertEquals(
+        $this->assertContains(
             <<<'JS'
-(function(g){g.i18n = {};
 g.i18n['validation'] = {};
 g.i18n['validation']['email'] = function(d){ return '{,,incorrect \'ICU\'}'; };
-})(window);
 JS
             ,
             $response->body
