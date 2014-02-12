@@ -1,4 +1,4 @@
-<phpunit bootstrap="bootstrap.php"
+<phpunit bootstrap="../vendor/autoload.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -10,8 +10,7 @@
  >
 
     <listeners>
-        <listener class="\Mockery\Adapter\Phpunit\TestListener"
-                  file="../vendor/mockery/mockery/library/Mockery/Adapter/Phpunit/TestListener.php"> </listener>
+        <listener class="Mockery\Adapter\Phpunit\TestListener"/>
     </listeners>
 
     <php>

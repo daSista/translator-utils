@@ -11,7 +11,10 @@ abstract class CouchDbTestCase extends \PHPUnit_Framework_TestCase
 {
     protected function setup()
     {
-        exec('translator-couch ' . TEST_COUCHDB_PREFIX . ' ' . TEST_COUCHDB_LOCALE);
+        exec(
+            dirname(dirname(dirname(__DIR__))) .
+            '/node_modules/.bin/translator-couch ' . TEST_COUCHDB_PREFIX . ' ' . TEST_COUCHDB_LOCALE
+        );
     }
 
     protected function tearDown()

@@ -8,8 +8,24 @@ templates, AngularJS partials, and `json` data; with the subsequent storage in C
 # Requirements
 
 * php5-intl
+
+# Dev requirements
+
+* Nodejs package manager (npm) in PATH
 * couchdb
-* translator-couch npm module installed globally, or added to PATH
+
+CouchDb schema is developed separately as npm package [translator-couch](https://www.npmjs.org/package/translator-couch)
+
+# Testing
+
+To execute Unit tests run:
+
+    ./tests/run.sh --testsuite Unit
+
+Integration tests are depends on the database server `couchdb` and the package manager `npm`.
+They can be started this way:
+
+    ./tests/run.sh --testsuite Integration
 
 # License: MIT
 
