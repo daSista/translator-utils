@@ -27,10 +27,11 @@
     "require": {
         "php": ">=5.3.0",
         "ext-intl": "*",
-        "doctrine/couchdb": "dev-master"
+        "doctrine/couchdb": "dev-master",
+        "eloquent/composer-npm-bridge": "~2.0.0"
     },
     "require-dev": {
-        "mockery/mockery": "0.7.*",
+        "mockery/mockery": "~0.9.0",
         "phpunit/phpunit": "3.7.*",
         "hamcrest/hamcrest": "1.1.0",
         "mikey179/vfsStream": "1.1.*"
