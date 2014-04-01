@@ -8,11 +8,8 @@ templates, AngularJS partials, and `json` data; with the subsequent storage in C
 # Requirements
 
 * php5-intl
-
-# Dev requirements
-
 * Nodejs package manager (npm) in PATH
-* couchdb
+* CouchDB 1.2+
 
 CouchDb schema is developed separately as npm package [translator-couch](https://www.npmjs.org/package/translator-couch)
 
