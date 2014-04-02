@@ -1,6 +1,6 @@
 before_install:
-  - sudo add-apt-repository ppa:chris-lea/node.js
-  - sudo apt-get update
+  - sudo add-apt-repository ppa:chris-lea/node.js -y
+  - sudo apt-get update -qq
   - sudo apt-get install python-software-properties python g++ make nodejs
 
 language: php
