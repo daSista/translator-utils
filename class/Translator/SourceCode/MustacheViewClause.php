@@ -22,7 +22,7 @@ class MustacheViewClause
     public function parameters()
     {
         $parts = preg_split(
-            '/\\s*([a-zA-Z0-9]+)\\s*=\\s*/',
+            '/\\s*([_\.a-zA-Z0-9]+)\\s*=\\s*/',
             $this->paramPart,
             -1,
             PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
