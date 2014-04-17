@@ -37,6 +37,11 @@ class MustacheViewClauseTest extends \PHPUnit_Framework_TestCase
                 'helloPerson NAME = "John Doe"'
             ),
             array(
+                'helloPerson',
+                array('person.name' => 'John Doe'),
+                'helloPerson person.name = "John Doe"'
+            ),
+            array(
                 'names:caffee',
                 array('TITLE' => 'Legendary "Titanic"'),
                 'names:caffee TITLE = "Legendary "Titanic""'
@@ -50,6 +55,11 @@ class MustacheViewClauseTest extends \PHPUnit_Framework_TestCase
                 'greetVisitor',
                 array('NAME' => '', 'TITLE' => 'Mr.'),
                 'greetVisitor NAME ="" TITLE = "Mr."'
+            ),
+            array(
+                'email/orderConfirmation:dearMrLastName',
+                array('NAME_PREFIX' => 'Mr', 'LAST_NAME' => 'Doe'),
+                'email/orderConfirmation:dearMrLastName NAME_PREFIX="Mr" LAST_NAME="Doe"'
             ),
         );
     }
