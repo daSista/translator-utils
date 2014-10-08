@@ -44,7 +44,11 @@ class Bulk extends CouchDb
 
                 /** @var String $string */
                 foreach ($this->stringsStack[$behavior] as $string) {
-                    $bulkUpdater->updateDocument($this->createDocument($string, $behavior, $existingStrings));
+                    $existingStrings[$string->hash()] = $this->createDocument($string, $behavior, $existingStrings);
+                }
+
+                foreach ($existingStrings as $document) {
+                    $bulkUpdater->updateDocument($document);
                 }
 
                 $bulkUpdater->execute();
