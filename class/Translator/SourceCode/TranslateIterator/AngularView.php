@@ -13,10 +13,10 @@ class AngularView implements TranslateIteratorInterface
         $template = file_get_contents($filePath);
         $translations = array();
 
-        preg_match_all("/{{\\s*'([^']+)'\\s*\\|\\s*i18n\\s*(?::|}})/", $template, $matches, PREG_SET_ORDER);
+        preg_match_all("/{{(::|)\\s*'([^']+)'\\s*\\|\\s*i18n\\s*(?::|}})/", $template, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $group) {
-            $translations[$group[1]] = null;
+            $translations[$group[2]] = null;
         }
 
         return $translations;
