@@ -1,6 +1,7 @@
 {
   "name": "translator-utils",
   "version": "4.0.4",
+  "repository": "git@github.com:Magomogo/translator-utils.git",
   "devDependencies": {
     "translator-couch": "~1.1.1"
   }
