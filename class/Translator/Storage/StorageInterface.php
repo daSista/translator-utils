@@ -22,7 +22,7 @@ interface StorageInterface
     public function setTranslationValue($string);
 
     /**
-     * @param null|string $namespace
+     * @param null|string|array $namespace
      * @return array key to value map
      */
     public function mappedTranslations($namespace = null);
