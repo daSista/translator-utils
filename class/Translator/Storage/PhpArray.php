@@ -63,6 +63,11 @@ class PhpArray implements StorageInterface
         return $resultingMap;
     }
 
+    public function getTranslationsArray()
+    {
+        return $this->translations;
+    }
+
     private static function belongsToOneOf($namespaces, $ns)
     {
         foreach ($namespaces as $existing) {
