@@ -13,7 +13,7 @@ class PhpArray implements StorageInterface
     }
 
     /**
-     * @param \Translator\String $string
+     * @param \Translator\MultiString $string
      * @return void
      */
     public function ensurePresence($string)
@@ -27,7 +27,7 @@ class PhpArray implements StorageInterface
     }
 
     /**
-     * @param \Translator\String $string
+     * @param \Translator\MultiString $string
      * @return void
      */
     public function setTranslationValue($string)

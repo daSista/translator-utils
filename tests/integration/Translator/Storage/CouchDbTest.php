@@ -2,7 +2,7 @@
 namespace Translator\Storage;
 
 use Translator\Test\CouchDbTestCase;
-use Translator\String;
+use Translator\MultiString;
 
 class CouchDbIntegrationTest extends CouchDbTestCase
 {
@@ -81,8 +81,8 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     public function testUpdatesExistingStringPreservingDescription()
     {
-        $stringWithDescription = String::create('validation:email', 'Email', 'Validation message');
-        $stringWithoutDescription = String::create('validation:email', 'email:');
+        $stringWithDescription = MultiString::create('validation:email', 'Email', 'Validation message');
+        $stringWithoutDescription = MultiString::create('validation:email', 'email:');
         self::storage()->setTranslationValue($stringWithDescription);
         self::storage()->setTranslationValue($stringWithoutDescription);
 
@@ -94,9 +94,9 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     public function testCanPreserveDatabaseContentWhenStringIsBeingRegistered()
     {
-        $string = String::create('now', 'Accurate translation', 'Accurate description');
+        $string = MultiString::create('now', 'Accurate translation', 'Accurate description');
         self::storage()->setTranslationValue($string);
-        self::storage()->ensurePresence(String::create('now', 'Now', 'now word'));
+        self::storage()->ensurePresence(MultiString::create('now', 'Now', 'now word'));
 
         $this->assertEquals(
             $string->asDocument(),
@@ -106,23 +106,23 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     public function testAppendsMissedContextDescriptionToDatabaseContentWhenStringIsBeingRegistered()
     {
-        $string = String::create('now', 'Accurate translation', '');
+        $string = MultiString::create('now', 'Accurate translation', '');
         self::storage()->setTranslationValue($string);
-        self::storage()->ensurePresence(String::create('now', 'Now', 'Context description'));
+        self::storage()->ensurePresence(MultiString::create('now', 'Now', 'Context description'));
 
         $this->assertEquals(
-            String::create('now', 'Accurate translation', 'Context description')->asDocument(),
+            MultiString::create('now', 'Accurate translation', 'Context description')->asDocument(),
             array_diff_key(self::storage()->findDocument($string->hash()), array('_id' => null, '_rev' => null))
         );
     }
 
     public function testEnsurePresenceAccumulatesTheDistinctSources()
     {
-        $s = String::create('moo1006:foo', 'bar', null, '/dev/stdin');
+        $s = MultiString::create('moo1006:foo', 'bar', null, '/dev/stdin');
 
         self::storage()->ensurePresence($s);
         self::storage()->ensurePresence($s);
-        self::storage()->ensurePresence(String::create('moo1006:foo', 'bar', null, '/dev/null'));
+        self::storage()->ensurePresence(MultiString::create('moo1006:foo', 'bar', null, '/dev/null'));
 
         $doc = self::storage()->findDocument($s->hash());
         $this->assertSame(array('/dev/stdin', '/dev/null'), $doc['source']);
@@ -131,8 +131,8 @@ class CouchDbIntegrationTest extends CouchDbTestCase
     public function testBulkInsertWorks()
     {
         $bulkStorage = self::bulkStorage();
-        $bulkStorage->ensurePresence(String::create('one', 'One'));
-        $bulkStorage->ensurePresence(String::create('two', 'Two'));
+        $bulkStorage->ensurePresence(MultiString::create('one', 'One'));
+        $bulkStorage->ensurePresence(MultiString::create('two', 'Two'));
         $bulkStorage->commit();
 
         $docs = $this->allButDesignDocument();
@@ -145,12 +145,12 @@ class CouchDbIntegrationTest extends CouchDbTestCase
 
     public function testBulkUpdateWorks()
     {
-        $string = String::create('one', 'One');
+        $string = MultiString::create('one', 'One');
         self::storage()->setTranslationValue($string);
 
         $bulkStorage = self::bulkStorage();
-        $bulkStorage->ensurePresence(String::create('one', 'One'));
-        $bulkStorage->ensurePresence(String::create('two', 'Two'));
+        $bulkStorage->ensurePresence(MultiString::create('one', 'One'));
+        $bulkStorage->ensurePresence(MultiString::create('two', 'Two'));
         $bulkStorage->commit();
 
         $docs = $this->allButDesignDocument();

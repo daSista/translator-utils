@@ -4,7 +4,7 @@ namespace Translator\Adapter;
 
 use Translator\Application;
 use Translator\String\Decorator;
-use Translator\String;
+use Translator\MultiString;
 
 class ICU implements AdapterInterface
 {
@@ -76,6 +76,6 @@ class ICU implements AdapterInterface
     }
 
     private static function defaultTranslation($key) {
-        return strval(String::create($key, null));
+        return strval(MultiString::create($key, null));
     }
 }

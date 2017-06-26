@@ -2,7 +2,7 @@
 
 namespace Translator\Storage;
 
-use Translator\String;
+use Translator\MultiString;
 
 interface StorageInterface
 {

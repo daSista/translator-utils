@@ -3,7 +3,7 @@ namespace Translator\Storage;
 
 use Doctrine\CouchDB\CouchDBClient;
 use Doctrine\CouchDB\View\DesignDocument;
-use Translator\String;
+use Translator\MultiString;
 
 class DummyDesignDocument implements DesignDocument
 {

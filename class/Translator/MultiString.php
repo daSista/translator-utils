@@ -2,7 +2,7 @@
 
 namespace Translator;
 
-class String
+class MultiString
 {
     private $key;
     private $translation;
@@ -172,7 +172,7 @@ class String
     }
 
     private static function defaultTranslation($key) {
-        $string = String::create($key, $key);
+        $string = MultiString::create($key, $key);
         $return = array();
         if (preg_match_all('/(\b|[A-Z0-9]+)[a-z0-9-]+/', $string->key(), $matches)) {
             foreach ($matches[0] as $part) {

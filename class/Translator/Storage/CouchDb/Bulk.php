@@ -3,7 +3,7 @@
 namespace Translator\Storage\CouchDb;
 
 use Translator\Storage\CouchDb;
-use Translator\String;
+use Translator\MultiString;
 
 class Bulk extends CouchDb
 {
@@ -104,7 +104,7 @@ class Bulk extends CouchDb
         $existingStrings = array();
         foreach ($query->execute() as $record) {
             $doc = $record['value'];
-            $string = String::create(
+            $string = MultiString::create(
                 ($doc['namespace'] ? join('/', $doc['namespace']) . ':' : '') . $doc['key'],
                 $doc['translation'],
                 array_key_exists('description', $doc) ? $doc['description'] : null,

@@ -2,7 +2,7 @@
 
 namespace Translator\Storage;
 
-use Translator\String;
+use Translator\MultiString;
 
 class PhpArrayTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,7 +80,7 @@ class PhpArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdatesExistingString()
     {
-        $string = String::create('validation:email', 'Email for orders');
+        $string = MultiString::create('validation:email', 'Email for orders');
         $storage = self::storage();
         $storage->setTranslationValue($string);
 
@@ -91,7 +91,7 @@ class PhpArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testCreatesNewTranslationWhenStringIsBeingRegistered()
     {
-        $string = String::create('validation:billingAddress', 'Billing address');
+        $string = MultiString::create('validation:billingAddress', 'Billing address');
         $storage = self::storage();
         $storage->ensurePresence($string);
 
@@ -101,7 +101,7 @@ class PhpArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testCanPreserveTranslationWhenStringIsBeingRegistered()
     {
-        $string = String::create('validation:email', 'Email for orders');
+        $string = MultiString::create('validation:email', 'Email for orders');
         $storage = self::storage();
         $storage->ensurePresence($string);
 

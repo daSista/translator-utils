@@ -3,7 +3,7 @@
 namespace Translator\SourceCode;
 
 use Translator\SourceCode\TranslateIterator\AngularView;
-use Translator\String;
+use Translator\MultiString;
 use org\bovigo\vfs\vfsStream;
 use Mockery as m;
 use Translator\Storage\StorageInterface;
@@ -33,14 +33,14 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
         $storage
             ->shouldReceive('ensurePresence')
             ->with(
-                equalTo(String::create('title', 'The title', null, 'vfs://templates/order.html'))
+                equalTo(MultiString::create('title', 'The title', null, 'vfs://templates/order.html'))
             )->once();
 
         $storage
             ->shouldReceive('ensurePresence')
             ->with(
                 equalTo(
-                    String::create(
+                    MultiString::create(
                         'order/details:title',
                         'Here are the order details',
                         null,
@@ -53,7 +53,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('ensurePresence')
             ->with(
                 equalTo(
-                    String::create(
+                    MultiString::create(
                         'agb',
                         'Terms and conditions',
                         null,
@@ -73,7 +73,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('ensurePresence')
             ->with(
                 equalTo(
-                    String::create(
+                    MultiString::create(
                         'order/details:title',
                         'Title',
                         null,
@@ -115,7 +115,7 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('ensurePresence')
             ->with(
                 equalTo(
-                    String::create(
+                    MultiString::create(
                         'order/details:title',
                         'Here are the order details',
                         'H1 title in GUI',

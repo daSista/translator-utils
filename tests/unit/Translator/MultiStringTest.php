@@ -2,7 +2,7 @@
 
 namespace Translator;
 
-class StringTest extends \PHPUnit_Framework_TestCase
+class MultiStringTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanBeCreatedWithFactoryMethod()
     {
@@ -26,8 +26,8 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function testIgnoresEmptyNamespace()
     {
         $this->assertEquals(
-            String::create(':key', 'Translation'),
-            String::create('key', 'Translation')
+            MultiString::create(':key', 'Translation'),
+            MultiString::create('key', 'Translation')
         );
     }
 
@@ -41,7 +41,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             self::str(),
 
-            String::find(
+            MultiString::find(
                 'validation/error:notEmpty',
                 null,
 
@@ -62,16 +62,16 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             array('/etc/etc'),
-            String::find('foo', '/etc/etc', array('foo' => 'BAR'), array())->source()
+            MultiString::find('foo', '/etc/etc', array('foo' => 'BAR'), array())->source()
         );
     }
 
     public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfNSLonger()
     {
         $this->assertEquals(
-            String::create('validation/error/fatal:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+            MultiString::create('validation/error/fatal:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
 
-            String::find(
+            MultiString::find(
                 'validation/error/fatal:notQuiteSimpleKeyToSearch',
                 null,
 
@@ -91,9 +91,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfKeyExistsSimilarToNS()
     {
         $this->assertEquals(
-            String::create('validation/error:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
+            MultiString::create('validation/error:notQuiteSimpleKeyToSearch', 'Not quite simple key to search'),
 
-            String::find(
+            MultiString::find(
                 'validation/error:notQuiteSimpleKeyToSearch',
                 null,
 
@@ -111,9 +111,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function testDefaultTranslationIfCanNotBeFoundInHierarchicalArrayIfKeyProvidesOtherTranslations()
     {
         $this->assertEquals(
-            String::create('validation:error', 'Error'),
+            MultiString::create('validation:error', 'Error'),
 
-            String::find(
+            MultiString::find(
                 'validation:error',
                 null,
 
@@ -133,14 +133,14 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
     public function testAllNamespacedKeysReturnsNothingForAnEmptyTranslationsArray()
     {
-        $this->assertEquals(array(), String::allNamespacedKeys(array()));
+        $this->assertEquals(array(), MultiString::allNamespacedKeys(array()));
     }
 
     public function testAllNamespacedKeysWorksForFlatTranslationsArray()
     {
         $this->assertEquals(
             array('foo', 'bar'),
-            String::allNamespacedKeys(array('foo' => '1', 'bar' => '2'))
+            MultiString::allNamespacedKeys(array('foo' => '1', 'bar' => '2'))
         );
     }
 
@@ -149,7 +149,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             array('foo/bar/fiz/buz:moo', 'goo', 'doo:zoo'),
 
-            String::allNamespacedKeys(
+            MultiString::allNamespacedKeys(
                 array(
                     'foo' => array('bar' => array('fiz' => array('buz' => array('moo' => 'Му')))),
                     'goo' => 'Гу',
@@ -178,7 +178,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreatesDefaultTranslationWhenTranslationNotDefined($expectedTranslation, $keyWithNamespace)
     {
-        $this->assertEquals($expectedTranslation, strval(String::create($keyWithNamespace, null)));
+        $this->assertEquals($expectedTranslation, strval(MultiString::create($keyWithNamespace, null)));
     }
 
     public static function translationPairsDataProvider()
@@ -200,7 +200,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
     private static function str($description = null, $source = null)
     {
-        return String::create(
+        return MultiString::create(
             'validation/error:notEmpty',
             'Should be not empty',
             $description,

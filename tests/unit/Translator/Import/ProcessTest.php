@@ -3,7 +3,7 @@
 namespace Translator\Import;
 
 use Mockery as m;
-use Translator\String;
+use Translator\MultiString;
 
 class ProcessTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,10 +11,10 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
     {
         $storage = m::mock();
         $storage->shouldReceive('setTranslationValue')
-            ->with(equalTo(String::create('yes', 'Yes')))
+            ->with(equalTo(MultiString::create('yes', 'Yes')))
             ->once();
         $storage->shouldReceive('setTranslationValue')
-            ->with(equalTo(String::create('validator:notEmpty', 'Should be not empty', 'Validation error messages')))
+            ->with(equalTo(MultiString::create('validator:notEmpty', 'Should be not empty', 'Validation error messages')))
             ->once();
 
         $process = new Process($storage);

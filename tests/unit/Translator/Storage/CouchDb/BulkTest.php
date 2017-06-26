@@ -5,7 +5,7 @@ namespace Translator\Storage\CouchDb;
 use Doctrine\CouchDB\CouchDBClient;
 use Doctrine\CouchDB\HTTP\Response;
 use Mockery as m;
-use Translator\String;
+use Translator\MultiString;
 
 class BulkTest extends \PHPUnit_Framework_TestCase
 {
@@ -133,12 +133,12 @@ class BulkTest extends \PHPUnit_Framework_TestCase
 
     private static function yesString()
     {
-        return String::create('yes', 'Ja');
+        return MultiString::create('yes', 'Ja');
     }
 
     private static function noString()
     {
-        return String::create('no', 'Nein');
+        return MultiString::create('no', 'Nein');
     }
 
     private static function noObj()
