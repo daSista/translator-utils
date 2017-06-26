@@ -21,7 +21,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
     {
         $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
         $connection->shouldReceive('request')
-            ->with('POST', '/fake_db_name/_design/main/_view/find?', anything())
+            ->with('POST', matchesPattern('@^/fake_db_name/_design/main/_view/find\?@'), m::any())
             ->andReturn(new Response(200, array(), array('rows' => array()), true));
 
         $connection->shouldReceive('request')->with('POST', '/fake_db_name/_bulk_docs', m::on(function ($arg) {
@@ -42,7 +42,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
                             ),
                         ),
                     );
-            }))->once();
+            }), m::any(), m::any())->once();
         $connection->shouldReceive('request');
 
         $storage = self::storage(m::mock(self::couchDb($connection), array('getAllDatabases' => array('fake_db_name'))));
@@ -56,7 +56,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
     {
         $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
         $connection->shouldReceive('request')
-            ->with('POST', '/fake_db_name/_design/main/_view/find?', anything())
+            ->with('POST', matchesPattern('@^/fake_db_name/_design/main/_view/find\?@'), m::any())
             ->andReturn(new Response(200, array(), array('rows' => array(
                     array(
                         'value' => array(
@@ -90,7 +90,7 @@ class BulkTest extends \PHPUnit_Framework_TestCase
                             ),
                         ),
                     );
-                }))->once();
+                }), m::any(), m::any())->once();
         $connection->shouldReceive('request');
 
         $storage = self::storage(m::mock(self::couchDb($connection), array('getAllDatabases' => array('fake_db_name'))));
@@ -103,10 +103,10 @@ class BulkTest extends \PHPUnit_Framework_TestCase
     {
         $connection = m::mock('Doctrine\\CouchDB\\HTTP\\Client');
         $connection->shouldReceive('request')
-            ->with('POST', '/fake_db_name/_design/main/_view/find?', anything())
+            ->with('POST', matchesPattern('@^/fake_db_name/_design/main/_view/find\?@'), m::any())
             ->andReturn(new Response(200, array(), array('rows' => array()), true));
 
-        $connection->shouldReceive('request')->with('POST', '/fake_db_name/_bulk_docs', m::any())->twice();
+        $connection->shouldReceive('request')->with('POST', '/fake_db_name/_bulk_docs', m::any(), m::any(), m::any())->twice();
 
         $storage = self::storage(
             m::mock(self::couchDb($connection), array('getAllDatabases' => array('fake_db_name')))
