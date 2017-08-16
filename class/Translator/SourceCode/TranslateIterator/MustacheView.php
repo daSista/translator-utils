@@ -22,12 +22,12 @@ class MustacheView implements TranslateIteratorInterface
         $tagQuoted = preg_quote($this->translationTagName, '@');
 
         preg_match_all(
-            '@{{#' . $tagQuoted . '}}(.+?){{/' . $tagQuoted . '}}@is',
+            '@{{#\\s?' . $tagQuoted . '\\s?}}(.+?){{/\\s?' . $tagQuoted . '\\s?}}@is',
             $template, $matches, PREG_SET_ORDER
         );
 
         foreach ($matches as $group) {
-            if (preg_match('/^([^\\s]+)\\s+(.+)$/im', $group[1], $attrMatches)) {
+            if (preg_match('/^([^\\s{]+)\\s+(.+)$/im', $group[1], $attrMatches)) {
                 $key = $attrMatches[1];
                 $parameters = self::collectParameters($attrMatches[2]);
             } else {

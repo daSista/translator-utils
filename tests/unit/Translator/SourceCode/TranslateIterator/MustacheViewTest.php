@@ -25,6 +25,7 @@ class MustacheViewTest extends \PHPUnit_Framework_TestCase
                 'security' => null,
                 'termsAndConditions' => null,
                 'copyright' => array('year'),
+                'i18n/with/gaps' => null
             ),
 
             $translations
