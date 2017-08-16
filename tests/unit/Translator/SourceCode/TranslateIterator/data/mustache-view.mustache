@@ -42,16 +42,19 @@
     </div>
     <footer>
         <div class="container">
-        <div class="footer-links clearfix">
-            <ul>
-                <!-- Support for XML-like attributes with single or double quotes around attributes values and several spaces around -->
-                <li><a href="">{{#i18n}}aboutUs   company="name"   phone='555-1234'   {{/i18n}}</a></li>
-                <li><a href="">{{#i18n}}frequentlyAskedQuestions{{/i18n}}</a></li>
-                <li><a href="">{{#i18n}}privacyPolicy{{/i18n}}</a></li>
-                <li><a href="">{{#i18n}}security{{/i18n}}</a></li>
-                <li><a href="">{{#i18n}}termsAndConditions{{/i18n}}</a></li>
-            </ul>
-        </div>
+            <div class="footer-links clearfix">
+                <ul>
+                    <!-- Support for XML-like attributes with single or double quotes around attributes values and several spaces around -->
+                    <li><a href="">{{#i18n}}aboutUs   company="name"   phone='555-1234'   {{/i18n}}</a></li>
+                    <li><a href="">{{#i18n}}frequentlyAskedQuestions{{/i18n}}</a></li>
+                    <li><a href="">{{#i18n}}privacyPolicy{{/i18n}}</a></li>
+                    <li><a href="">{{#i18n}}security{{/i18n}}</a></li>
+                    <li><a href="">{{#i18n}}termsAndConditions{{/i18n}}</a></li>
+                </ul>
+            </div>
+            <div class="row">
+                <p>{{#i18n}}copyright year="{{year}}" {{/i18n}}</p>
+            </div>
             <div class="row">
                 <div class="span6">
                     <!-- Support of nested mustache tags and/or braces in attributes -->
@@ -66,6 +69,8 @@
         </div>
 
         {{#i18n}}key/with:{{variable}}{{/i18n}}
+        {{#i18n}}admin/attributes:{{ sourceName }}{{/i18n}}
+        {{# i18n }}i18n/with/gaps{{/ i18n }}
 
     </footer>
     {{#translate}}
